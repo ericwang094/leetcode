@@ -58,8 +58,6 @@ public class L0133_CloneGraph {
             return null;
         }
 
-
-        
         HashMap<UndirectedGraphNode, UndirectedGraphNode> map = new HashMap<>();
         ArrayList<UndirectedGraphNode> nodeList = new ArrayList<>();
         nodeList.add(node);
@@ -95,5 +93,39 @@ public class L0133_CloneGraph {
         }
 
         return map.get(node);
+    }
+
+    class StackElement {
+        public UndirectedGraphNode node;
+        public int neighborIndex;
+        public StackElement(UndirectedGraphNode node, int neighborIndex) {
+            this.node = node;
+            this.neighborIndex = neighborIndex;
+        }
+    }
+    private ArrayList<UndirectedGraphNode> getNodesWithStack(UndirectedGraphNode node) {
+        Stack<StackElement> stack = new Stack<StackElement>();
+        HashSet<UndirectedGraphNode> set = new HashSet<UndirectedGraphNode>();
+
+        stack.push(new StackElement(node, -1));
+        set.add(node);
+        while (!stack.isEmpty()) {
+            StackElement currentNode = stack.peek();
+            currentNode.neighborIndex++;
+            if (currentNode.neighborIndex == currentNode.node.neighbors.size()) {
+                stack.pop();
+                continue;
+            }
+
+            UndirectedGraphNode neighbor = currentNode.node.neighbors.get(currentNode.neighborIndex);
+            if (set.contains(neighbor)) {
+                continue;
+            }
+
+            stack.push(new StackElement(neighbor, -1));
+            set.add(neighbor);
+        }
+
+        return new ArrayList<UndirectedGraphNode>(set);
     }
 }
