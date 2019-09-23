@@ -11,20 +11,21 @@ public class TopologicalSorting {
      * @return: Any topological order for the given graph.
      */
     public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
-        // write your code here
         ArrayList<DirectedGraphNode> result = new ArrayList<DirectedGraphNode>();
+
+        if (graph == null || graph.size() == 0) {
+            return result;
+        }
+        // write your code here
         HashMap<DirectedGraphNode, Integer> map = new HashMap<>();
-        for (DirectedGraphNode node : graph) {
-            for (DirectedGraphNode neighbor : node.neighbors) {
-                if (map.containsKey(neighbor)) {
-                    map.put(neighbor, map.get(neighbor) + 1);
-                } else {
-                    map.put(neighbor, 1);
-                }
+        for(DirectedGraphNode node : graph) {
+            for (DirectedGraphNode neighbor: node.neighbors) {
+                int num = map.getOrDefault(neighbor, 0);
+                map.put(neighbor, num + 1);
             }
         }
 
-        Queue<DirectedGraphNode> queue = new LinkedList<DirectedGraphNode>();
+        Queue<DirectedGraphNode> queue = new LinkedList<>();
         for (DirectedGraphNode node : graph) {
             if (!map.containsKey(node)) {
                 queue.offer(node);
@@ -33,12 +34,12 @@ public class TopologicalSorting {
         }
 
         while (!queue.isEmpty()) {
-            DirectedGraphNode node = queue.poll();
-            for (DirectedGraphNode n : node.neighbors) {
-                map.put(n, map.get(n) - 1);
-                if (map.get(n) == 0) {
-                    result.add(n);
-                    queue.offer(n);
+            DirectedGraphNode currentNode = queue.poll();
+            for (DirectedGraphNode node : currentNode.neighbors) {
+                map.put(node, map.get(node) - 1);
+                if (map.get(node) == 0) {
+                    result.add(node);
+                    queue.offer(node);
                 }
             }
         }
