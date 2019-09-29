@@ -3,95 +3,56 @@ package leetcode.BFS;
 import java.util.*;
 
 public class L0127_WordLadder {
-//    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-//        if (beginWord.equals(endWord)) {
-//            return 1;
-//        }
-//        Set<String> dict = new HashSet<>();
-//        for (String word : wordList) {
-//            dict.add(word);
-//        }
-//
-//        HashSet<String> hash = new HashSet<String>();
-//        Queue<String> queue = new LinkedList<String>();
-//        queue.offer(beginWord);
-//        hash.add(beginWord);
-//
-//        int length = 1;
-//        while (!queue.isEmpty()) {
-//            length++;
-//            int size = queue.size();
-//            for (int i = 0; i < size; i++) {
-//                String word = queue.poll();
-//                for (String nextWord: getNextWords(word, dict)) {
-//                    if (hash.contains(nextWord)) {
-//                        continue;
-//                    }
-//                    if (nextWord.equals(endWord)) {
-//                        return length;
-//                    }
-//                    hash.add(nextWord);
-//                    queue.offer(nextWord);
-//                }
-//            }
-//        }
-//
-//        return 0;
-//    }
-    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-        if (beginWord.equals(endWord)) {
-            return 1;
-        }
+    public int ladderLength(String start, String end, Set<String> dict) {
 
-        HashSet<String> dict = new HashSet<String>(wordList);
+        dict.add(start);
+        dict.add(end);
 
-        Queue<String> queue = new LinkedList<String>();
         HashSet<String> set = new HashSet<String>();
-        queue.offer(beginWord);
-        set.add(endWord);
+        Queue<String> queue = new LinkedList<>();
+        queue.add(start);
 
-        int length = 1;
+        set.add(start);
+
+        int count = 1;
         while (!queue.isEmpty()) {
-            length++;
+            count++;
             int size = queue.size();
             for (int i = 0; i < size; i++) {
-                String word = queue.poll();
-                for (String nextWord : getNextWords(word, dict)) {
-                    if (set.contains(nextWord)) {
+                String currentWord = queue.poll();
+                ArrayList<String> nextWords = getNextWords(currentWord, dict);
+                for (String word : nextWords) {
+                    if (word.equals(end)) {
+                        return count;
+                    }
+                    if (set.contains(word)) {
                         continue;
                     }
-                    if (nextWord.equals(endWord)) {
-                        return length;
-                    }
-
-                    set.add(nextWord);
-                    queue.offer(nextWord);
+                    queue.offer(word);
+                    set.add(word);
                 }
             }
+
         }
         return 0;
     }
 
-    private String replace(String word, int i, char c) {
-        char[] chars = word.toCharArray();
-        chars[i] = c;
-        return new String(chars);
-    }
-
-    private ArrayList<String> getNextWords(String word, Set<String> dict) {
-        ArrayList<String> newWords = new ArrayList<String>();
-        for (char c = 'a'; c <= 'z'; c++) {
+    private ArrayList<String> getNextWords (String word, Set<String> set) {
+        ArrayList<String> result = new ArrayList<String>();
+        for (Character c = 'a'; c < 'z'; c++) {
             for (int i = 0; i < word.length(); i++) {
-                if (c == word.indexOf(i)) {
+                if (word.indexOf(i) == c) {
                     continue;
                 }
-
-                String nextWord = replace(word, i, c);
-                if (dict.contains(nextWord)) {
-                    newWords.add(nextWord);
+                char[] cArray = word.toCharArray();
+                cArray[i] = c;
+                String newWord = new String(cArray);
+                if (set.contains(newWord)) {
+                    result.add(newWord);
                 }
             }
         }
-        return newWords;
+        return result;
     }
+
 }
