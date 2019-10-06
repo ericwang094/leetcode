@@ -8,7 +8,7 @@ public class FlattenBinaryTreeToLinkedList {
      * @return: nothing
      */
     public void flatten(TreeNode root) {
-        helper (root);
+        helper(root);
     }
 
     private TreeNode helper(TreeNode root) {
@@ -16,21 +16,21 @@ public class FlattenBinaryTreeToLinkedList {
             return root;
         }
 
-        TreeNode leftLast = helper(root.left);
-        TreeNode rightLast = helper(root.right);
+        TreeNode leftNode = helper(root.left);
+        TreeNode rightNode = helper(root.right);
 
-        if (leftLast != null) {
-            leftLast.right = root.right;
+        if (leftNode != null) {
+            leftNode.right = root.right;
             root.right = root.left;
             root.left = null;
         }
 
-        if (rightLast != null) {
-            return rightLast;
+        if (rightNode != null) {
+            return rightNode;
         }
 
-        if (leftLast != null) {
-            return leftLast;
+        if (leftNode != null) {
+            return leftNode;
         }
 
         return root;
