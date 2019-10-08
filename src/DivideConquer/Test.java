@@ -3,52 +3,46 @@ package DivideConquer;
 import leetcode.BFS.TreeNode;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Stack;
 
 public class Test {
-    /**
-     * @param root: the root of the binary tree
-     * @return: all root-to-leaf paths
+    /*
+     * @param root: The root of the binary tree.
+     * @param A: A TreeNode
+     * @param B: A TreeNode
+     * @return: Return the LCA of the two nodes.
      */
-    public void flatten(TreeNode root) {
-        // write your code here
-        helper(root);
+    public boolean isValidBST(TreeNode root) {
+        return divConq(root, Long.MIN_VALUE, Long.MAX_VALUE);
     }
 
-    public TreeNode helper(TreeNode root) {
+    private boolean divConq(TreeNode root, long min, long max) {
         if (root == null) {
-            return null;
+            return true;
+        }
+        if (root.val <= min || root.val >= max) {
+            return false;
         }
 
-        TreeNode flattenLeft = helper(root.left);
-        TreeNode flattenRight = helper(root.right);
-
-        if (flattenLeft != null) {
-            flattenLeft.right = root.right;
-            root.right = root.left;
-            root.left = null;
-        }
-
-        if (flattenRight != null) {
-            return flattenRight;
-        }
-
-        if (flattenLeft != null) {
-            return flattenLeft;
-        }
-
-        return root;
+        return divConq(root.left, min, Math.min(root.val, max)) &&
+                divConq(root.right, Math.max(min, root.val), min);
     }
-
-
 
     public static void main(String[] args) {
         Test test = new Test();
-        TreeNode input = new TreeNode(1);
-        input.left = new TreeNode(2);
-        input.left.left = new TreeNode(5);
+//        TreeNode input = new TreeNode(4);
+//        input.left = new TreeNode(3);
+//
+//        input.right = new TreeNode(7);
+//        input.right.left = new TreeNode(5);
+//        input.right.right = new TreeNode(6);
 
-        input.right = new TreeNode(3);
+        TreeNode input = new TreeNode(1);
+        input.left = new TreeNode(1);
+
+        test.isValidBST(input);
 
     }
 }
