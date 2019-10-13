@@ -20,26 +20,38 @@ public class ThreeSum {
         Arrays.sort(numbers);
 
         // write your code here
-        for (int i = 0; i < numbers.length - 2; i++) {
+        for (int i = 0; i < numbers.length - 1; i++) {
             if (i > 0 && numbers[i] == numbers[i - 1]) {
                 continue;
             }
             int target = -numbers[i];
-            HashMap<Integer, Integer> map = new HashMap<>();
-            for (int j = i + 1; j < numbers.length; j++) {
 
-                int component = target - numbers[j];
-                if (map.containsKey(component)) {
+            int startIndex = i + 1;
+            int endIndex = numbers.length - 1;
+
+            while (startIndex < endIndex) {
+                int sum = numbers[startIndex] + numbers[endIndex];
+                if (sum == target) {
                     List<Integer> list = new ArrayList<>();
                     list.add(numbers[i]);
-                    list.add(component);
-                    list.add(numbers[j]);
+                    list.add(numbers[startIndex]);
+                    list.add(numbers[endIndex]);
                     result.add(list);
+
+                    startIndex++;
+                    endIndex--;
+
+                    while (startIndex < endIndex && numbers[startIndex] == numbers[startIndex - 1]) {
+                        startIndex++;
+                    }
+
+                    while (startIndex < endIndex && numbers[endIndex] == numbers[endIndex + 1]) {
+                        endIndex--;
+                    }
+                } else if (sum < target) {
+                    startIndex++;
                 } else {
-                    map.put(numbers[j], component);
-                }
-                while (numbers[j] == numbers[j - 1]) {
-                    j++;
+                    endIndex--;
                 }
             }
         }
