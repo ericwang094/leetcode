@@ -7,27 +7,30 @@ public class PartitionArray {
      * @return: The index after partition
      */
     public int partitionArray(int[] nums, int k) {
-        // write your code here
-        int startIndex = 0;
-        int endIndex = nums.length - 1;
-        while (startIndex < endIndex) {
-            while (startIndex < endIndex && nums[startIndex] < k) {
-                startIndex++;
-            }
-            while (startIndex <= endIndex && nums[endIndex] >= k) {
-                endIndex--;
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+            while (left <= right && nums[left] < k) {
+                left++;
             }
 
-            if (startIndex <= endIndex) {
-                int temp = nums[startIndex];
-                nums[startIndex] = nums[endIndex];
-                nums[endIndex] = temp;
+            while (left <= right && nums[right] >= k) {
+                right--;
+            }
 
-                startIndex++;
-                endIndex--;
+            if (left <= right) {
+                int temp = nums[left];
+                nums[left] = nums[right];
+                nums[right] = temp;
+
+                left++;
+                right--;
             }
         }
 
-        return startIndex;
+        return left;
     }
 }
