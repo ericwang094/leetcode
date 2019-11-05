@@ -29,6 +29,29 @@ public class TwoSumIIInputArrayIsSorted {
         return result;
     }
 
+    public int[] twoSum2(int[] nums, int target) {
+        int[] result = new int[2];
+
+        int firstIndex = 0;
+        int lastIndex = nums.length - 1;
+
+        while (firstIndex < lastIndex) {
+            if (nums[firstIndex] + nums[lastIndex] == target) {
+                result[0] = firstIndex + 1;
+                result[1] = lastIndex + 1;
+                return result;
+            }
+
+            if (nums[firstIndex] + nums[lastIndex] < target) {
+                firstIndex++;
+            } else {
+                lastIndex--;
+            }
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         TwoSumIIInputArrayIsSorted test = new TwoSumIIInputArrayIsSorted();
         int[] input = {2, 7, 11, 15};

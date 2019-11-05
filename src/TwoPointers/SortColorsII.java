@@ -45,4 +45,38 @@ public class SortColorsII {
         rainbowsort(colors, start, right, lowerBound, colorMid);
         rainbowsort(colors, left, end, colorMid + 1, upperBound);
     }
+
+    public void rainbowSort2 (int[] colors, int start, int end, int lowerBound, int upperBound) {
+        if (start >= end) {
+            return;
+        }
+
+        if (lowerBound == upperBound) {
+            return;
+        }
+
+        int colorMid = (lowerBound + upperBound) / 2;
+        int left = start, right = end;
+        while (left <= right) {
+            while (left <= right && colors[left] < colorMid) {
+                left++;
+            }
+
+            while (left <= right && colors[right] > colorMid) {
+                right--;
+            }
+
+            if (left <= right) {
+                int temp = colors[left];
+                colors[left] = colors[right];
+                colors[right] = temp;
+
+                left++;
+                right--;
+            }
+        }
+
+        rainbowSort2(colors, start, right, lowerBound, colorMid);
+        rainbowSort2(colors, left, end, colorMid + 1, upperBound);
+    }
 }
