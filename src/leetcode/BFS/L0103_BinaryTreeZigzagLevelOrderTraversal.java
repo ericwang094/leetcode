@@ -41,6 +41,41 @@ public class L0103_BinaryTreeZigzagLevelOrderTraversal {
         return result;
     }
 
+    public List<List<Integer>> test(TreeNode root)  {
+        List<List<Integer>> list = new ArrayList<>();
+        if (root == null) {
+            return list;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+
+        boolean fromLeft = true;
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> levelList = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (fromLeft) {
+                    levelList.add(node.val);
+                } else {
+                    levelList.add(0, node.val);
+                }
+
+                if (node.left != null) {
+                    queue.add(node.left);
+                }
+                if (node.right != null) {
+                    queue.add(node.right);
+                }
+            }
+            fromLeft = !fromLeft;
+            list.add(levelList);
+        }
+        return list;
+    }
+
     public static void main(String[] args) {
         L0103_BinaryTreeZigzagLevelOrderTraversal test = new L0103_BinaryTreeZigzagLevelOrderTraversal();
         TreeNode node = new TreeNode(1);
@@ -50,6 +85,6 @@ public class L0103_BinaryTreeZigzagLevelOrderTraversal {
         node.left.left = new TreeNode(4);
         node.right.right = new TreeNode(5);
 
-        test.zigzagLevelOrder(node);
+        test.test(node);
     }
 }
