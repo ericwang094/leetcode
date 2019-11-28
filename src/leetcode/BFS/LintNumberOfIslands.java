@@ -1,7 +1,6 @@
 package leetcode.BFS;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class LintNumberOfIslands {
     /**
@@ -9,57 +8,54 @@ public class LintNumberOfIslands {
      * @return: an integer
      */
     public int numIslands(boolean[][] grid) {
-        // write your code here
-        if (grid == null || grid.length == 0 || grid[0].length == 0) {
-            return 0;
-        }
+    	if (grid == null || grid.length == 0 || grid[0].length == 0) {
+    		return 0;
+	    }
+    	int island = 0;
 
-        int island = 0;
-        int n = grid.length;
-        int m = grid[0].length;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (grid[i][j]) {
-                    island++;
-                    markByBFS(grid, i, j);
-                }
-            }
-        }
-
-        return island;
+	    for (int i = 0; i < grid.length; i++) {
+	    	for (int j = 0; j < grid[i].length; j++ ){
+	    		if (grid[i][j]) {
+	    			changeIslands(i, j, grid);
+	    			island++;
+			    }
+		    }
+	    }
+	    return island;
     }
 
-    private void markByBFS(boolean[][] grid, int x, int y) {
-        int[] coordinateX = {0, -1, 1, 0};
-        int[] coordinateY = {-1, 0, 0, 1};
+    private void changeIslands (int x, int y, boolean[][] grid) {
+		int[] directionX = {0, 1, -1, 0};
+		int[] directionY = {-1, 0, 0, 1};
 
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.offer(new Coordinate(x, y));
-        grid[x][y] = false;
+		Queue<Coordinate> queue = new LinkedList<>();
 
-        while (!queue.isEmpty()) {
-            Coordinate coor = queue.poll();
-            for (int i = 0; i < 4; i++) {
-                Coordinate adj = new Coordinate(
-                        coor.x + coordinateX[i],
-                        coor.y + coordinateY[i]
-                );
-                if (!inBound(adj, grid)) {
-                    continue;
-                }
+		queue.offer(new Coordinate(x, y));
+		grid[x][y] = false;
 
-                if (grid[adj.x][adj.y]) {
-                    grid[adj.x][adj.y] = false;
-                    queue.offer(adj);
-                }
-            }
-        }
+		while (!queue.isEmpty()) {
+			Coordinate coor = queue.poll();
+			for (int i = 0; i < 4; i++) {
+				Coordinate adj = new Coordinate(
+					coor.x + directionX[i],
+					coor.y + directionY[i]
+				);
+				if (!inBound(adj, grid)) {
+					continue;
+				}
+				if (grid[adj.x][adj.y]) {
+					grid[adj.x][adj.y] = false;
+					queue.offer(adj);
+				}
+			}
+		}
     }
 
     private boolean inBound(Coordinate coor, boolean[][] grid) {
-        int n = grid.length;
-        int m = grid[0].length;
-        return coor.x >= 0 && coor.x < n && coor.y >= 0 && coor.y < m;
+    	int n = grid.length;
+    	int m = grid[0].length;
+
+    	return coor.x >= 0 && coor.x < n && coor.y >= 0 && coor.y < m;
     }
 }
 
