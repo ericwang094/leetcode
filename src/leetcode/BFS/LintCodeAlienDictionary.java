@@ -4,77 +4,95 @@ import java.util.*;
 
 public class LintCodeAlienDictionary {
     public String alienOrder(String[] words) {
-        Map<Character, Set<Character>> graph = constructGraph(words);
-        return topologicalSorting(graph);
+		Map<Character, AlienDictionary> mapCharToAlienObj = new HashMap<>();
+		// create node
+		for(String word : words) {
+			char[] charArray = word.toCharArray();
+			for (int i = 0; i < charArray.length; i++) {
+				char c = charArray[i];
+				AlienDictionary ad;
+				if (!mapCharToAlienObj.containsKey(c)) {
+					ad = new AlienDictionary(c, 0, new HashSet<>());
+					mapCharToAlienObj.put(c, ad);
+				}
+			}
+		}
+
+		// create edges
+	    for (int i = 0; i < words.length - 1; i++) {
+			int index = 0;
+			while (index < words[i].length() && index < words[i + 1].length()) {
+				if (words[i].charAt(index) != words[i + 1].charAt(index)) {
+					mapCharToAlienObj.get(words[i + 1].charAt(index)).degree++;
+					AlienDictionary currentC = mapCharToAlienObj.get(words[i].charAt(index));
+					currentC.preRequest.add(words[i + 1].charAt(index));
+					break;
+				}
+				index++;
+			}
+	    }
+
+
+		PriorityQueue<Character> queue = new PriorityQueue<>();
+		for (Map.Entry<Character, AlienDictionary> entry : mapCharToAlienObj.entrySet()) {
+			if (entry.getValue().degree == 0) {
+				queue.add(entry.getKey());
+			}
+		}
+
+	    StringBuilder sb = new StringBuilder();
+		while (!queue.isEmpty()) {
+
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				Character c = queue.poll();
+
+				Set<Character> preRequestSet = mapCharToAlienObj.get(c).preRequest;
+				for (Character ch : preRequestSet) {
+					AlienDictionary correspondingAD = mapCharToAlienObj.get(ch);
+					correspondingAD.degree--;
+
+					if (correspondingAD.degree == 0) {
+						queue.add(correspondingAD.c);
+					}
+				}
+				sb.append(c);
+			}
+		}
+
+		String result = sb.toString();
+
+		boolean mapEmpty = true;
+	    for (Map.Entry<Character, AlienDictionary> entry : mapCharToAlienObj.entrySet()) {
+		    if (entry.getValue().degree > 0) {
+			    mapEmpty = false;
+			    break;
+		    }
+	    }
+
+	    if (mapEmpty) {
+	    	return result;
+	    } else {
+	    	return "";
+	    }
     }
 
-    private Map<Character, Set<Character>> constructGraph(String[] words) {
-        // create node
-        Map<Character, Set<Character>> map = new HashMap<>();
-        for (String word : words) {
-            for (int i = 0; i < word.length(); i++) {
-                if (!map.containsKey(word.charAt(i))) {
-                    map.put(word.charAt(i), new HashSet<>());
-                }
-            }
-        }
+	public static void main(String[] args) {
+		LintCodeAlienDictionary ad = new LintCodeAlienDictionary();
+		System.out.println(ad.alienOrder(new String[] {"wrt","wrf","er","ett","rftt"}));
 
-        // create edge
-        for (int i = 0; i < words.length - 1; i++) {
-            int index = 0;
-            while (index < words[i].length() && index < words[i + 1].length()) {
-                if (words[i].charAt(index) != words[i + 1].charAt(index)) {
-                    map.get(words[i].charAt(index)).add(words[i + 1].charAt(index));
-                    break;
-                }
-                index++;
-            }
-        }
+	}
 
-        return map;
-    }
+}
 
-    private Map<Character, Integer> getIndegree(Map<Character, Set<Character>> graph) {
-        Map<Character, Integer> degreeMap = new HashMap<>();
-        for (Character c : graph.keySet()) {
-            degreeMap.put(c, 0);
-        }
+class AlienDictionary {
+    char c;
+    int degree;
+    Set<Character> preRequest;
 
-        for (Character c : graph.keySet()) {
-            for (Character v : graph.get(c)) {
-                degreeMap.put(v, degreeMap.get(v) + 1);
-            }
-        }
-
-        return degreeMap;
-    }
-
-    private String topologicalSorting(Map<Character, Set<Character>> graph) {
-        Map<Character, Integer> indegree = getIndegree(graph);
-
-        Queue<Character> queue = new PriorityQueue<>();
-
-        for (Character u : indegree.keySet()) {
-            if (indegree.get(u) == 0) {
-                queue.offer(u);
-            }
-        }
-
-        StringBuilder sb = new StringBuilder();
-        while (!queue.isEmpty()) {
-            Character head = queue.poll();
-            sb.append(head);
-            for (Character neighbor : graph.get(head)) {
-                indegree.put(neighbor, indegree.get(neighbor) - 1);
-                if (indegree.get(neighbor) == 0) {
-                    queue.offer(neighbor);
-                }
-            }
-        }
-
-        if (sb.length() != indegree.size()) {
-            return "";
-        }
-        return sb.toString();
+    public AlienDictionary(char c, int degree, Set<Character> preRequest) {
+        this.c = c;
+        this.degree = degree;
+        this.preRequest = preRequest;
     }
 }

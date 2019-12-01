@@ -1,9 +1,6 @@
 package leetcode.BFS;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class LintKinightShortestPath {
     /**
@@ -18,63 +15,44 @@ public class LintKinightShortestPath {
             return -1;
         }
 
-        int result = 0;
+        if (source == destination) {
+            return 1;
+        }
 
-        Queue<Point> queue = new LinkedList<Point>();
+        Queue<Point> queue = new LinkedList<>();
         queue.offer(source);
-        grid[source.x][source.y] = true;
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            result++;
 
-            for (int i = 0; i < size; i++ ) {
-                Point currentPoint = queue.poll();
-                ArrayList<Point> neighbors = getNeighbors(currentPoint, grid);
-                for(Point neighbor : neighbors) {
-                    if (neighbor.x == destination.x && neighbor.y == destination.y) {
-                        return result;
+        int steps = 0;
+
+        int[] directionXs = {1, 1, 2, 2, -1, -1, -2, -2};
+        int[] directionYs = {2, -2, 1, -1, 2, -2, 1, -1};
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                Point newPoint = queue.poll();
+                if (newPoint.x == destination.x && newPoint.y == destination.y) {
+                    return steps;
+                }
+
+                for (int direction = 0; direction < 8; direction++) {
+                    int newX = newPoint.x + directionXs[direction];
+                    int newY = newPoint.y + directionYs[direction];
+                    Point nextPoint = new Point(newX, newY);
+                    if (isValidPoint(newX, newY, grid)) {
+                        queue.add(nextPoint);
+                        grid[newX][newY] = true;
                     }
-                    queue.offer(neighbor);
                 }
             }
+            steps++;
         }
 
         return -1;
     }
 
-    private ArrayList<Point> getNeighbors(Point point, boolean[][] grid) {
-        ArrayList<Point> neighbors = new ArrayList<Point>();
-        int[] coordStepOne = {1, -1};
-        int[] coordStepTwo = {2, -2};
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                int newX = point.x + coordStepOne[i];
-                int newY = point.y + coordStepTwo[j];
-                if (inBound(newX, newY, grid)) {
-                    Point newPoint = new Point(newX, newY);
-                    grid[newX][newY] = true;
-                    neighbors.add(newPoint);
-                }
-
-                newX = point.x + coordStepTwo[i];
-                newY = point.y + coordStepOne[j];
-                if (inBound(newX, newY, grid)) {
-                    Point newPoint = new Point(newX, newY);
-                    grid[newX][newY] = true;
-                    neighbors.add(newPoint);
-                }
-            }
-        }
-        return neighbors;
+    private boolean isValidPoint(int x, int y, boolean[][] grid) {
+        return x >= 0 && x < grid.length && y >= 0 && y < grid[x].length && !grid[x][y];
     }
-
-    private boolean inBound(int pointX, int pointY, boolean[][] grid) {
-        int n = grid.length;
-        int m = grid[0].length;
-        return pointX >= 0 && pointX < n
-                && pointY >= 0 && pointY < m && !grid[pointX][pointY];
-    }
-
 
     public static void main (String[] args) {
         LintKinightShortestPath test = new LintKinightShortestPath();
