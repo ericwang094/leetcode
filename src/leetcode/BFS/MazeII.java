@@ -31,20 +31,18 @@ public class MazeII {
 		while (!queue.isEmpty()) {
 			PointWithSteps currentPoint = queue.poll();
 
-			if (currentPoint.steps  >= res[currentPoint.x][currentPoint.y]) {
+			if (currentPoint.steps >= res[currentPoint.x][currentPoint.y]) {
 				continue;
 			}
 
-			int currentX = currentPoint.x;
-			int currentY = currentPoint.y;
-			int currentSteps = currentPoint.steps;
-
-			res[currentX][currentY] = currentSteps;
+			res[currentPoint.x][currentPoint.y] = currentPoint.steps;
 
 			for (int i = 0; i < 4; i++) {
-
+				int currentX = currentPoint.x;
+				int currentY = currentPoint.y;
+				int currentSteps = currentPoint.steps;
 				while (currentX >= 0 && currentX < m
-						&& currentY >= 0 && currentY < n && maze[currentX][currentY] == 1) {
+						&& currentY >= 0 && currentY < n && maze[currentX][currentY] == 0) {
 					currentX += directionXs[i];
 					currentY += directionYs[i];
 					currentSteps++;
@@ -59,6 +57,22 @@ public class MazeII {
 		}
 
 		return res[destination[0]][destination[1]] == Integer.MAX_VALUE ? -1 : res[destination[0]][destination[1]];
+	}
+
+	public static void main(String[] args) {
+		MazeII test = new MazeII();
+		int[][] maze = {
+				{0, 0, 1, 0, 0},
+				{0, 0, 0, 0, 0},
+				{0, 0, 0, 1, 0},
+				{1, 1, 0, 1, 1},
+				{0, 0, 0, 0, 0}
+		};
+
+		int[] start = {0, 4};
+		int[] end = {4, 4};
+
+		test.shortestDistance(maze, start, end);
 	}
 }
 
