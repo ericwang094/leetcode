@@ -1,53 +1,52 @@
 package leetcode.BFS;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import TwoPointers.ListNode;
+
+import java.util.*;
 
 public class Test {
-	/*
-	 * @param numCourses: a total of n courses
-	 * @param prerequisites: a list of prerequisite pairs
-	 * @return: true if can finish all courses or false
+	/**
+	 * @param root the root of binary tree
+	 * @return a lists of linked list
 	 */
-	public boolean canFinish(int numCourses, int[][] prerequisites) {
-		int[] degrees = new int[numCourses];
-		List<Integer>[] edges = new List[numCourses];
-
-		for (int i = 0; i < prerequisites.length; i++) {
-			edges[i] = new ArrayList<>();
+	public List<ListNode> binaryTreeToLists(TreeNode root) {
+		List<ListNode> result = new ArrayList<>();
+		if (root == null) {
+			return result;
 		}
 
-		for (int i = 0; i < prerequisites.length; i++) {
-			degrees[prerequisites[i][0]]++;
-			edges[prerequisites[i][1]].add(prerequisites[i][0]);
-		}
+		// Write your code here
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
 
-		Queue<Integer> queue = new LinkedList<>();
-		for (int i = 0; i < degrees.length; i++) {
-			if (degrees[i] == 0) {
-				queue.add(i);
-			}
-		}
-
-		int count = 0;
 		while (!queue.isEmpty()) {
 			int size = queue.size();
+			ListNode dummy = new ListNode(0);
+			ListNode currentList = dummy;
 			for (int i = 0; i < size; i++) {
-				int currentCourse = queue.poll();
-				for (int j = 0; j < edges[currentCourse].size(); j++) {
-					degrees[edges[currentCourse].get(j)]--;
-					if (degrees[edges[currentCourse].get(j)] == 0) {
-						queue.add(edges[currentCourse].get(j));
-					}
+				TreeNode currentNode = queue.poll();
+				currentList.next = new ListNode(currentNode.val);
+				currentList = currentList.next;
+
+				if (currentNode.left != null) {
+					queue.add(currentNode.left);
+				}
+				if (currentNode.right != null) {
+					queue.add(currentNode.right);
 				}
 			}
-			count++;
+
+			result.add(dummy.next);
 		}
 
-		return count == numCourses;
+		return result;
 	}
 
+	public static void main(String[] args) {
+		Test t = new Test();
+		int[] input = {1, 2, 3};
+		int[][] des = {{1,2}, {1,3}, {2,3}};
+
+	}
 }
 
