@@ -1,7 +1,6 @@
 package leetcode.BFS;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 public class SearchGraphNodes {
 	/*
@@ -15,6 +14,36 @@ public class SearchGraphNodes {
 	                                      Map<UndirectedGraphNode, Integer> values,
 	                                      UndirectedGraphNode node,
 	                                      int target) {
-		// write your code here
+
+		if (node == null) {
+			return null;
+		}
+
+		if (values.get(node) == target) {
+			return node;
+		}
+
+		Set<UndirectedGraphNode> set = new HashSet<>();
+		Queue<UndirectedGraphNode> queue = new LinkedList<>();
+		queue.add(node);
+		set.add(node);
+
+		while (!queue.isEmpty()) {
+			UndirectedGraphNode currentNode = queue.poll();
+			if (values.get(currentNode) == target) {
+				return currentNode;
+			}
+
+			for (UndirectedGraphNode neighbor : currentNode.neighbors) {
+				if (set.contains(neighbor)) {
+					continue;
+				}
+
+				queue.add(neighbor);
+				set.add(neighbor);
+			}
+		}
+
+		return null;
 	}
 }
