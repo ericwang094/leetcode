@@ -45,6 +45,9 @@ public class ZombieMatrix {
 						grid[newX][newY] = 1;
 						queue.add(newPoint);
 						numOfPeople--;
+						if (numOfPeople == 0) {
+							return count;
+						}
 //						break;
 					}
 				}
@@ -62,6 +65,6 @@ public class ZombieMatrix {
 		};
 
 		ZombieMatrix zm = new ZombieMatrix();
-		zm.zombie(input);
+		System.out.println(zm.zombie(input));
 	}
 }
