@@ -1,9 +1,6 @@
 package leetcode.BFS;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class LintCodeCourseScheduleII {
     /*
@@ -12,47 +9,53 @@ public class LintCodeCourseScheduleII {
      * @return: the course order
      */
     public int[] findOrder(int numCourses, int[][] prerequisites) {
-        int[] result = new int[numCourses];
-
-        // write your code here
         int[] degree = new int[numCourses];
-        List<Integer>[] edges = new ArrayList[numCourses];
+        List[] edges = new ArrayList[numCourses];
 
         for (int i = 0; i < numCourses; i++) {
             edges[i] = new ArrayList<Integer>();
         }
 
-        for (int i = 0; i < prerequisites.length; i++) {
+        for(int i = 0; i < prerequisites.length; i++) {
             degree[prerequisites[i][0]]++;
-            edges[prerequisites[i][1]].add(prerequisites[i][0]);
         }
 
+        List<Integer> result = new ArrayList<>();
+
         Queue<Integer> queue = new LinkedList<>();
-        for (int i = 0; i < degree.length; i++) {
-            if (degree[i] == 0) {
-                queue.offer(i);
+        for (int i = 0; i < prerequisites.length; i++) {
+            if (degree[prerequisites[i][1]] == 0) {
+                queue.add(prerequisites[i][1]);
             }
         }
 
-        int numOfCourse = 0;
-        while (!queue.isEmpty()) {
-            int course = queue.poll();
-            result[numOfCourse] = course;
-            numOfCourse++;
+        int count = 0;
 
-            for (int i = 0; i < edges[course].size(); i++) {
-                int index = edges[course].get(i);
-                degree[index]--;
-                if (degree[index] == 0) {
-                    queue.offer(index);
+        while(!queue.isEmpty()) {
+            int currentCourse = queue.poll();
+            result.add(currentCourse);
+            count++;
+            int size = edges[currentCourse].size();
+            for (int i = 0; i < size; i++) {
+                int pointer = (int) edges[currentCourse].get(i);
+                degree[pointer]--;
+                if (degree[pointer] == 0) {
+                    queue.add(pointer);
+                    result.add(prerequisites[i][1]);
                 }
             }
         }
 
-        if (numOfCourse == numCourses) {
-            return result;
+        if (count == numCourses) {
+            int[] resultArray = new int[numCourses];
+            for (int i = 0; i < result.size(); i++) {
+            	resultArray[i] = (int) result.get(i);
+            }
+            return resultArray;
         } else {
-            return new int[0];
+
+            return new int[]{};
         }
+
     }
 }

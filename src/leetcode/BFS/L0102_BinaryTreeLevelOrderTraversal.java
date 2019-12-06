@@ -21,24 +21,63 @@ public class L0102_BinaryTreeLevelOrderTraversal {
             if (root == null) {
                 return result;
             }
-            Queue<TreeNode> nodeList = new LinkedList<>();
-            nodeList.offer(root);
-            while (!nodeList.isEmpty()) {
-                int nodeListLength = nodeList.size();
-                List<Integer> currentLevel = new ArrayList<>();
-                for (int i = 0; i < nodeListLength; i++) {
-                    TreeNode currentNode = nodeList.poll();
-                    currentLevel.add(currentNode.val);
-                    if (currentNode.left != null) {
-                        nodeList.offer(currentNode.left);
+
+            Queue<TreeNode> queue = new LinkedList<>();
+            queue.add(root);
+            while (!queue.isEmpty()) {
+                int size = queue.size();
+                List<Integer> levelResult = new ArrayList<>();
+                for (int i = 0; i < size; i++) {
+                    TreeNode node = queue.poll();
+                    levelResult.add(node.val);
+
+                    if (node.left != null) {
+                        queue.add(node.left);
                     }
-                    if (currentNode.right != null) {
-                        nodeList.offer(currentNode.right);
+
+                    if (node.right != null) {
+                        queue.add(node.right);
                     }
                 }
-                result.add(currentLevel);
+                result.add(levelResult);
             }
             return result;
+        }
+
+        public List<List<Integer>> levelOrderDFS(TreeNode root) {
+            List<List<Integer>> result = new ArrayList<>();
+            if (root == null) {
+                return result;
+            }
+
+            int maxLevel = 0;
+            while (true) {
+                List<Integer> levelResult = new ArrayList<>();
+
+                dfs(root, levelResult, 0, maxLevel);
+                if (levelResult.size() == 0) {
+                    break;
+                }
+
+                result.add(levelResult);
+                maxLevel++;
+            }
+
+            return result;
+        }
+
+        private void dfs(TreeNode node, List<Integer> levelResult, int currentLevel, int maxLevel) {
+            if (node == null || currentLevel > maxLevel) {
+                return;
+            }
+
+            if (currentLevel == maxLevel) {
+                levelResult.add(node.val);
+                return;
+            }
+
+            dfs(node.left, levelResult, currentLevel + 1, maxLevel);
+            dfs(node.right, levelResult, currentLevel + 1, maxLevel);
         }
     }
 }

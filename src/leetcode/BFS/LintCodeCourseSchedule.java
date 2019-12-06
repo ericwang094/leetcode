@@ -9,40 +9,39 @@ public class LintCodeCourseSchedule {
      * @return: true if can finish all courses or false
      */
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        int[] degree = new int[numCourses];
-        List<Integer>[] edges = new List[numCourses];
+        List[] edges = new ArrayList[numCourses];
+    	int[] degree = new int[numCourses];
 
-        for (int i = 0; i < numCourses; i++) {
-            edges[i] = new ArrayList<Integer>();
-        }
+    	for(int i = 0; i < numCourses; i++) {
+    		edges[i] = new ArrayList<Integer>();
+	    }
 
-        // build edges, degree
-        for (int i = 0; i < prerequisites.length; i++) {
-            degree[prerequisites[i][0]]++;
-            edges[prerequisites[i][1]].add(prerequisites[i][0]);
-        }
+	    for (int i = 0; i < prerequisites.length; i++) {
+    		degree[prerequisites[i][0]]++;
+    		edges[prerequisites[i][1]].add(prerequisites[i][0]);
+	    }
 
-        Queue<Integer> queue = new LinkedList<>();
-        for (int i = 0; i < degree.length; i++) {
-            if (degree[i] == 0) {
-                queue.offer(i);
-            }
-        }
+	    Queue<Integer> queue = new LinkedList<>();
+    	for (int i = 0; i < degree.length; i++) {
+    		if (degree[i] == 0) {
+    			queue.add(i);
+		    }
+	    }
 
-        int count = 0;
-        while (!queue.isEmpty()) {
-            int course = queue.poll();
-            count++;
-            for (int i = 0; i < edges[course].size(); i++) {
-                int pointer = edges[course].get(i);
-                degree[pointer]--;
-                if (degree[pointer] == 0) {
-                    queue.offer(pointer);
-                }
-            }
-        }
-
-        return count == numCourses;
+	    int count = 0;
+    	while(!queue.isEmpty()) {
+    		int course = queue.poll();
+    		count++;
+    		int n = edges[course].size();
+    		for (int i = 0; i < n; i++) {
+    			int pointer = (int) edges[course].get(i);
+    			degree[pointer]--;
+    			if (degree[pointer] == 0) {
+    				queue.add(pointer);
+			    }
+		    }
+	    }
+		return count == numCourses;
     }
 
     public static void main (String[] args) {
