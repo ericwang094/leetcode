@@ -36,6 +36,28 @@ public class FlattenBinaryTreeToLinkedList {
         return root;
     }
 
+    public void flatten2(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        flatten2(root.left);
+        flatten2(root.right);
+
+        if (root.left == null) {
+            return;
+        }
+
+        TreeNode node = root.left;
+        while (node.right != null) {
+            node = node.right;
+        }
+
+        node.right = root.right;
+        root.right = root.left;
+        root.left = null;
+    }
+
     public static void main(String[] args) {
         FlattenBinaryTreeToLinkedList test = new FlattenBinaryTreeToLinkedList();
         TreeNode root = new TreeNode(1);

@@ -8,26 +8,20 @@ import java.util.List;
 import java.util.Stack;
 
 public class Test {
-    /*
-     * @param root: The root of the binary tree.
-     * @param A: A TreeNode
-     * @param B: A TreeNode
-     * @return: Return the LCA of the two nodes.
+
+    private TreeNode prev = null;
+    /**
+     * @param root: a TreeNode, the root of the binary tree
+     * @return: nothing
      */
-    public boolean isValidBST(TreeNode root) {
-        return divConq(root, Long.MIN_VALUE, Long.MAX_VALUE);
-    }
-
-    private boolean divConq(TreeNode root, long min, long max) {
-        if (root == null) {
-            return true;
-        }
-        if (root.val <= min || root.val >= max) {
-            return false;
-        }
-
-        return divConq(root.left, min, Math.min(root.val, max)) &&
-                divConq(root.right, Math.max(min, root.val), min);
+    public void flatten(TreeNode root) {
+        if (root == null)
+            return;
+        flatten(root.right);
+        flatten(root.left);
+        root.right = prev;
+        root.left = null;
+        prev = root;
     }
 
     public static void main(String[] args) {
@@ -40,9 +34,10 @@ public class Test {
 //        input.right.right = new TreeNode(6);
 
         TreeNode input = new TreeNode(1);
-        input.left = new TreeNode(1);
-
-        test.isValidBST(input);
+        input.left = new TreeNode(2);
+        input.right = new TreeNode(3);
+//
+        test.flatten(input);
 
     }
 }
