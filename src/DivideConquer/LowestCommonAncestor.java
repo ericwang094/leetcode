@@ -10,8 +10,11 @@ public class LowestCommonAncestor {
      * @return: Return the least common ancestor(LCA) of the two nodes.
      */
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode A, TreeNode B) {
-        // write your code here
-        if (root == null || root == A || root == B) {
+        if (root == null) {
+            return null;
+        }
+
+        if (root == A || root == B) {
             return root;
         }
 
@@ -24,8 +27,55 @@ public class LowestCommonAncestor {
             return left;
         } else if (right != null) {
             return right;
+        } else {
+            return null;
+        }
+    }
+
+    public ParentTreeNode lowestCommonAncestorII(ParentTreeNode root, ParentTreeNode A, ParentTreeNode B) {
+        if (root == null) {
+            return null;
+        }
+        if (root == A || root == B) {
+            return root;
         }
 
-        return null;
+        int levelLeft = levelOfNode(A);
+        int levelRight = levelOfNode(B);
+
+        ParentTreeNode leftNode = A;
+        ParentTreeNode rightNode = B;
+
+        while (levelLeft != levelRight) {
+            if (levelLeft > levelRight) {
+                leftNode = leftNode.parent;
+                levelLeft--;
+            } else {
+                rightNode = rightNode.parent;
+                levelRight--;
+            }
+        }
+
+        while (leftNode != rightNode && leftNode != null && rightNode != null) {
+            leftNode = leftNode.parent;
+            rightNode = rightNode.parent;
+        }
+
+        return leftNode;
+
+    }
+
+    private int levelOfNode (ParentTreeNode root) {
+        int level = 0;
+        while (root != null) {
+            root = root.parent;
+            level++;
+        }
+
+        return level;
+    }
+
+    class ParentTreeNode {
+        public ParentTreeNode parent, left, right;
     }
 }

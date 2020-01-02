@@ -9,37 +9,52 @@ public class ValidateBinarySearchTree {
      * @param root: The root of binary tree.
      * @return: True if the binary tree is BST, or false
      */
-    public boolean isValidBST(TreeNode root) {
-        // write your code here
+    public boolean isValidBST2(TreeNode root) {
         Stack<TreeNode> stack = new Stack<>();
         while (root != null) {
-            stack.push(root);
+            stack.add(root);
             root = root.left;
         }
 
-        TreeNode lastNode = null;
+        TreeNode pre = null;
         while (!stack.isEmpty()) {
-            TreeNode node = stack.peek();
-            if (lastNode != null && lastNode.val >= node.val) {
+            TreeNode node = stack.pop();
+            if (pre != null && node.val <= pre.val) {
                 return false;
-            }
-            lastNode = node;
-
-            // move to next
-            if (node.right == null) {
-                node = stack.pop();
-                while (!stack.isEmpty() && stack.peek().right == node) {
-                    node = stack.pop();
-                }
             } else {
+                pre = node;
+            }
+
+            if (node.right != null) {
                 node = node.right;
                 while (node != null) {
-                    stack.push(node);
                     node = node.left;
+                    stack.add(node);
+                }
+            } else {
+                while (!stack.isEmpty() && stack.peek().right == node) {
+                    node = stack.pop();
                 }
             }
         }
 
-       return true;
+        return true;
+    }
+
+    public boolean isValidBST(TreeNode root) {
+        return divConq(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    private boolean divConq (TreeNode root, long min, long max) {
+        if (root == null) {
+            return true;
+        }
+
+        if (root.val <= min || root.val >= max) {
+            return false;
+        }
+
+        return divConq(root.left, min, Math.min(max, root.val))
+                && divConq(root.right, Math.max(min, root.val), max);
     }
 }

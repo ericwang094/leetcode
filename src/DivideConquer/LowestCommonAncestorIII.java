@@ -3,50 +3,57 @@ package DivideConquer;
 import leetcode.BFS.TreeNode;
 
 public class LowestCommonAncestorIII {
+    private boolean existA = false;
+    private boolean existB = false;
+
+    /*
+     * @param root: The root of the binary tree.
+     * @param A: A TreeNode
+     * @param B: A TreeNode
+     * @return: Return the LCA of the two nodes.
+     */
     public TreeNode lowestCommonAncestor3(TreeNode root, TreeNode A, TreeNode B) {
-        LowestCommonAncestorIIIResultType rt = helper(root, A, B);
-        if (rt.a_exist && rt.b_exist) {
-            return rt.node;
+        TreeNode result = divConq(root, A, B);
+        if (existA && existB) {
+            return result;
         } else {
             return null;
         }
     }
 
-    public LowestCommonAncestorIIIResultType helper(TreeNode root, TreeNode A, TreeNode B) {
+    private TreeNode divConq(TreeNode root, TreeNode A, TreeNode B) {
         if (root == null) {
-            return new LowestCommonAncestorIIIResultType(false, false, null);
+            return null;
         }
 
-        LowestCommonAncestorIIIResultType leftRt = helper(root.left, A, B);
-        LowestCommonAncestorIIIResultType rightRt = helper(root.right, A, B);
+        TreeNode left = divConq(root.left, A, B);
+        TreeNode right = divConq(root.right, A, B);
 
-        boolean a_exist = leftRt.a_exist || rightRt.a_exist || root == A;
-        boolean b_exist = leftRt.b_exist || rightRt.b_exist || root == B;
-
-        if (root == A || root == B) {
-            return new LowestCommonAncestorIIIResultType(a_exist, b_exist, root);
+        if (root == A || root == B ){
+            existA = root == A ? true : existA;
+            existB = root == B ? true : existB;
+            return root;
         }
 
-        if (leftRt.node != null && rightRt.node != null) {
-            return new LowestCommonAncestorIIIResultType(a_exist, b_exist, root);
-        }
-        if (leftRt.node != null) {
-            return new LowestCommonAncestorIIIResultType(a_exist, b_exist, leftRt.node);
-        }
-        if (rightRt.node != null) {
-            return new LowestCommonAncestorIIIResultType(a_exist, b_exist, rightRt.node);
-        }
+        if (left != null && right != null) {
 
-        return new LowestCommonAncestorIIIResultType(a_exist, b_exist, null);
+            return root;
+        } else if (left != null) {
+            return left;
+        } else if (right != null) {
+            return right;
+        } else {
+            return null;
+        }
     }
-}
 
-class LowestCommonAncestorIIIResultType {
-    public boolean a_exist, b_exist;
-    public TreeNode node;
-    LowestCommonAncestorIIIResultType (boolean a, boolean b, TreeNode n) {
-        a_exist = a;
-        b_exist = b;
-        node = n;
+    public static void main(String[] args) {
+        Test test = new Test();
+
+        TreeNode input = new TreeNode(2);
+        input.left = new TreeNode(-1);
+
+        LowestCommonAncestorIII lca = new LowestCommonAncestorIII();
+        lca.lowestCommonAncestor3(input, input, input.left);
     }
 }

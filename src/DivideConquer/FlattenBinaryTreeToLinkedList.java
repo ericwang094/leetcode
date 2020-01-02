@@ -2,6 +2,8 @@ package DivideConquer;
 
 import leetcode.BFS.TreeNode;
 
+import java.util.Stack;
+
 public class FlattenBinaryTreeToLinkedList {
     /**
      * @param root: a TreeNode, the root of the binary tree
@@ -58,6 +60,31 @@ public class FlattenBinaryTreeToLinkedList {
         root.left = null;
     }
 
+    public void flatten3(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        stack.add(root);
+        while (!stack.empty()) {
+            TreeNode node = stack.pop();
+            if (node.right != null) {
+                stack.add(node.right);
+            }
+
+            if (node.left != null) {
+                stack.add(node.left);
+            }
+
+            node.left = null;
+            if (stack.empty()) {
+                node.right = null;
+            } else {
+                node.right = stack.peek();
+            }
+        }
+    }
+
     public static void main(String[] args) {
         FlattenBinaryTreeToLinkedList test = new FlattenBinaryTreeToLinkedList();
         TreeNode root = new TreeNode(1);
@@ -68,6 +95,6 @@ public class FlattenBinaryTreeToLinkedList {
         root.right = new TreeNode(5);
         root.right.right = new TreeNode(6);
 
-        test.flatten(root);
+        test.flatten3(root);
     }
 }

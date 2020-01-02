@@ -8,8 +8,8 @@ public class BSTIterator {
     private Stack<TreeNode> stack = new Stack<>();
     /*
      * @param root: The root of binary tree.
-     */
-    public BSTIterator(TreeNode root) {
+     */public BSTIterator(TreeNode root) {
+        // do intialization if necessary
         while (root != null) {
             stack.add(root);
             root = root.left;
@@ -28,13 +28,15 @@ public class BSTIterator {
      * @return: return next node
      */
     public TreeNode next() {
-        TreeNode currentNode = stack.peek();
-        TreeNode node = currentNode;
+        // write your code here
+        TreeNode cur = stack.peek();
+        TreeNode node = cur;
 
         if (node.right != null) {
             node = node.right;
+            stack.add(node);
             while (node != null) {
-                stack.push(node);
+                stack.add(node);
                 node = node.left;
             }
         } else {
@@ -44,6 +46,6 @@ public class BSTIterator {
             }
         }
 
-        return currentNode;
+        return cur;
     }
 }
