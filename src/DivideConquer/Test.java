@@ -12,58 +12,86 @@ public class Test {
      * @return: k values in the BST that are closest to the target
      */
     public List<Integer> closestKValues(TreeNode root, double target, int k) {
-        Stack<TreeNode> next = new Stack<TreeNode>();
-        Stack<TreeNode> prev = new Stack<TreeNode>();
-        TreeNode node = root;
+        Stack<TreeNode> preStack = new Stack<>();
+        Stack<TreeNode> nextStack = new Stack<>();
 
+        while (root != null) {
+            if (root.val < target) {
+                preStack.add(root);
+                root = root.right;
+            } else {
+                nextStack.add(root);
+                root = root.left;
+            }
+        }
+
+        List<Integer> result = new ArrayList<>();
+        while (result.size() < k ) {
+            double distN = nextStack.isEmpty() ? Double.MAX_VALUE : Math.abs(nextStack.peek().val - target);
+            double distP = preStack.isEmpty() ? Double.MAX_VALUE : Math.abs(target - preStack.peek().val);
+
+            if (distN < distP) {
+                result.add(nextStack.peek().val);
+                goNext(nextStack);
+            } else {
+                result.add(0, preStack.peek().val);
+                goPrev(preStack);
+            }
+        }
+
+        return result;
+    }
+
+    private void goNext(Stack<TreeNode> stack) {
+        TreeNode node = stack.pop().right;
         while (node != null) {
-            if (node.val < target) {
-                prev.push(node);
+            stack.push(node);
+            node = node.left;
+        }
+    }
+
+    private void goPrev(Stack<TreeNode> stack) {
+        TreeNode node = stack.pop().left;
+        while (node != null) {
+            stack.push(node);
+            node = node.right;
+        }
+    }
+
+    /**
+     * @param root: A Tree
+     * @return: Postorder in ArrayList which contains node values.
+     */
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        while (root != null) {
+            stack.add(root);
+            root = root.left;
+        }
+
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.peek();
+            if (node.right != null) {
                 node = node.right;
+                while (node != null) {
+                    stack.add(node);
+                    node = node.left;
+                }
             } else {
-                next.push(node);
-                node = node.left;
+                node = stack.pop();
+                result.add(node.val);
+
+                while (!stack.isEmpty() && stack.peek().right != null) {
+                    node = stack.pop();
+                    result.add(node.val);
+                }
             }
         }
-
-        List<Integer> ret = new LinkedList<>();
-
-        while (ret.size() < k) {
-            double distp = prev.isEmpty() ? Integer.MAX_VALUE : target - prev.peek().val;
-            double distn = next.isEmpty() ? Integer.MAX_VALUE : next.peek().val - target;
-
-            if (distp < distn) {
-                ret.add(0, prev.peek().val);
-                goPrev(prev);
-            } else {
-                ret.add(next.peek().val);
-                goNext(next);
-            }
-        }
-
-        return ret;
+        return result;
     }
-
-    private void goNext(Stack<TreeNode> st) {
-        TreeNode r = st.pop().right;
-        while (r != null) {
-            st.push(r);
-            r = r.left;
-        }
-    }
-
-    private void goPrev(Stack<TreeNode> st) {
-        TreeNode l = st.pop().left;
-
-        while (l != null) {
-            st.push(l);
-            l = l.right;
-        }
-    }
-
-
     public static void main(String[] args) {
-        Test test = new Test();
+//        Test test = new Test();
 //        TreeNode input = new TreeNode(4);
 //        input.left = new TreeNode(3);
 //
@@ -71,9 +99,9 @@ public class Test {
 //        input.right.left = new TreeNode(5);
 //        input.right.right = new TreeNode(6);
 
-        TreeNode input = new TreeNode(2);
-        input.left = new TreeNode(1);
-        input.right = new TreeNode(2);
+//        TreeNode input = new TreeNode(2);
+//        input.left = new TreeNode(1);
+//        input.right = new TreeNode(2);
 //
 //        boolean result = test.isValidBST2(input);
 //        if (result) {
@@ -81,6 +109,6 @@ public class Test {
 //        } else {
 //            System.out.println("false");
 //        }
-
+        System.out.println(((String)null).toUpperCase());
     }
 }
