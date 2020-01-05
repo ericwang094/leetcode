@@ -205,8 +205,8 @@ public class Test {
 //        } else {
 //            System.out.println("false");
 //        }
-        int[] input = new int[]{1, 0,-1,-1,-1,-1,0,1,1,1};
-        test.threeSum(input);
+        int[] input = new int[]{3,4,6,7};
+        test.triangleCount(input);
 
     }
 
@@ -257,4 +257,74 @@ public class Test {
 
         return result;
     }
+
+    /**
+     * @param S: A list of integers
+     * @return: An integer
+     */
+    public int triangleCount(int[] S) {
+        // write your code here
+        int result = 0;
+        Arrays.sort(S);
+
+        for (int i = 0; i < S.length - 1; i++) {
+            int start = 0;
+            int end = i - 1;
+            while (start < end) {
+                if (S[start] +  S[end] > S[i]) {
+                    result += (start - end);
+                    end--;
+                }else {
+                    start++;
+                }
+            }
+        }
+        return result;
+    }
+
+	/**
+	 * @param nums: an array of integer
+	 * @param target: an integer
+	 * @return: an integer
+	 */
+	public int twoSum5(int[] nums, int target) {
+		Arrays.sort(nums);
+		int result = 0;
+
+		int start = 0;
+		int end = nums.length - 1;
+		while (start < end) {
+			if (nums[start] + nums[end] <= target) {
+				result += (end - start);
+				start++;
+			} else {
+				end--;
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * @param nums: an array of integer
+	 * @param target: An integer
+	 * @return: an integer
+	 */
+	public int twoSum2(int[] nums, int target) {
+		int result = 0;
+		// write your code here
+		Arrays.sort(nums);
+		for (int i = 0; i < nums.length - 1; i++) {
+			int start = i + 1;
+			while (start < nums.length) {
+				int sum = nums[i] + nums[start];
+				if (sum > target) {
+					result += (nums.length - start);
+					break;
+				}
+				start++;
+			}
+		}
+		return result;
+	}
 }
