@@ -90,8 +90,104 @@ public class Test {
         }
         return result;
     }
+
+    /**
+     * @param s: A string
+     * @return: Whether the string is a valid palindrome
+     */
+    public boolean isPalindrome(String s) {
+        // write your code here
+        int start = 0;
+        int end = s.length() - 1;
+        char[] array = s.toCharArray();
+        while (start < end) {
+            while (start < end && !Character.isLetterOrDigit(array[start])) {
+                start++;
+            }
+
+            while (start < end && !Character.isLetterOrDigit(array[end])) {
+                end--;
+            }
+
+            if (Character.toLowerCase(array[start]) != Character.toLowerCase(array[end])) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * @param s: a string
+     * @return boolean: whether you can make s a palindrome by deleting at most one character
+     */
+    public boolean validPalindrome(String s) {
+        boolean hasDeleted = false;
+        int start = 0;
+        int end = s.length() - 1;
+        char[] array = s.toCharArray();
+        while (start < end) {
+            if (array[start] != array[end]) {
+                if (hasDeleted) {
+                    return false;
+                } else {
+                    hasDeleted = true;
+                    if (start + 1 < s.length() && array[start + 1] == array[end]) {
+                        start++;
+                    } else if (end - 1 >= 0 && array[end - 1] == array[start]) {
+                        end--;
+                    } else {
+                        return false;
+                    }
+                }
+            } else {
+                start++;
+                end--;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param nums: an array of integer
+     * @param target: An integer
+     * @return: An integer
+     */
+    public int twoSum6(int[] nums, int target) {
+        int result = 0;
+        Arrays.sort(nums);
+        int start = 0;
+        int end = nums.length - 1;
+
+        while (start < end) {
+            int sum = nums[start] + nums[end];
+            if (sum == target) {
+                result++;
+                start++;
+                end--;
+                if (start < end && start + 1 < nums.length && end - 1 >= 0
+                        && nums[start + 1] == nums[start]
+                        && nums[end - 1] == nums[end]) {
+                    start++;
+                    end--;
+                }
+
+            } else if (sum < target) {
+                start++;
+            } else {
+                end--;
+            }
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
-//        Test test = new Test();
+        Test test = new Test();
 //        TreeNode input = new TreeNode(4);
 //        input.left = new TreeNode(3);
 //
@@ -109,6 +205,56 @@ public class Test {
 //        } else {
 //            System.out.println("false");
 //        }
-        System.out.println(((String)null).toUpperCase());
+        int[] input = new int[]{1, 0,-1,-1,-1,-1,0,1,1,1};
+        test.threeSum(input);
+
+    }
+
+    /**
+     * @param numbers: Give an array numbers of n integer
+     * @return: Find all unique triplets in the array which gives the sum of zero.
+     */
+    public List<List<Integer>> threeSum(int[] numbers) {
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(numbers);
+        for (int i = 0; i < numbers.length - 1; i++) {
+            int target = -numbers[i];
+
+            if (i > 0 && numbers[i] == numbers[i - 1]) {
+                continue;
+            }
+            int start = i + 1;
+            int end = numbers.length - 1;
+            while (start < end) {
+                int sum = numbers[start] + numbers[end];
+                if (sum == target) {
+                    List<Integer> tempList = new ArrayList<>();
+
+                    tempList.add(numbers[i]);
+                    tempList.add(numbers[start]);
+                    tempList.add(numbers[end]);
+                    result.add(tempList);
+
+                    while (start < end && start + 1< numbers.length
+                        && numbers[start] == numbers[start + 1]) {
+                        start++;
+                    }
+
+                    while (start < end && end - 1 >= 0
+                            && numbers[end] == numbers[end - 1]) {
+                        end--;
+                    }
+
+                    start++;
+                    end--;
+                } else if (sum < target) {
+                    start++;
+                } else {
+                    end--;
+                }
+            }
+        }
+
+        return result;
     }
 }

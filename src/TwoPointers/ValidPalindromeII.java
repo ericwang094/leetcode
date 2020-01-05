@@ -32,6 +32,7 @@ public class ValidPalindromeII {
         return true;
     }
 
+
     public static void main(String[] args) {
         ValidPalindromeII test = new ValidPalindromeII();
         System.out.println(test.validPalindromeII("abccbaa"));
