@@ -327,4 +327,127 @@ public class Test {
 		}
 		return result;
 	}
+
+    /**
+     * @param nums: an array of Integer
+     * @param target: an integer
+     * @return: [index1 + 1, index2 + 1] (index1 < index2)
+     */
+    public int[] twoSum7(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(nums[i])) {
+                return new int[]{map.get(i) + 1, i + 1};
+            } else {
+                int sum = target + nums[i];
+                int diff = nums[i] - target;
+                map.put(sum, i);
+                map.put(diff, i);
+            }
+        }
+
+        return new int[]{};
+    }
+
+    /*
+     * @param A: An integer array.
+     * @return: nothing
+     */
+    public void rerange(int[] A) {
+        int countPositive = 0;
+
+        int positiveIndex = 0;
+        int pos = 1;
+        int neg = 0;
+
+        for (int i = 0; i < A.length; i++) {
+            if (A[i] > 0) {
+                swap(A, positiveIndex, i);
+                countPositive++;
+                positiveIndex++;
+            }
+        }
+
+        if (countPositive > A.length / 2) {
+            pos = 0;
+            neg = 1;
+
+            int left = 0;
+            int right = A.length - 1;
+            while (left < right) {
+                swap(A, left, right);
+                left++;
+                right--;
+            }
+        }
+
+        while (pos < A.length && neg < A.length) {
+            while (pos < A.length && A[pos] > 0) {
+                pos += 2;
+            }
+
+            while (neg < A.length && A[neg] < 0) {
+                neg += 2;
+            }
+
+            if (neg >= A.length || pos >= A.length) {
+                break;
+            }
+
+            swap(A, pos, neg);
+        }
+    }
+
+	public void sortLetters(char[] chars) {
+		int start = 0;
+		int end = chars.length - 1;
+		while (start < end) {
+			while (start < end
+					&& Character.isLowerCase(chars[start])) {
+				start++;
+			}
+
+			while (start <end && Character.isUpperCase(chars[end])) {
+				end--;
+			}
+
+			if (start < end) {
+				char temp = chars[start];
+				chars[start] = chars[end];
+				chars[end] = temp;
+			}
+		}
+	}
+
+    private void swap(int[] A, int l, int r) {
+        int temp = A[l];
+        A[l] = A[r];
+        A[r] = temp;
+    }
+
+	/**
+	 * @param nums: A list of integer which is 0, 1 or 2
+	 * @return: nothing
+	 */
+	public void sortColors(int[] nums) {
+		// write your code here
+		int start = 0;
+		int index = 0;
+		int end = nums.length - 1;
+
+		while (index < end) {
+			if (nums[index] == 0) {
+				nums[index] = nums[start];
+				nums[start] = 0;
+				index++;
+				start++;
+			} else if (nums[index] == 1) {
+				index++;
+			} else {
+				nums[index] = nums[end];
+				nums[end] = 2;
+				end--;
+			}
+		}
+	}
 }
