@@ -205,8 +205,8 @@ public class Test {
 //        } else {
 //            System.out.println("false");
 //        }
-        int[] input = new int[]{1, 0,-1,-1,-1,-1,0,1,1,1};
-        test.threeSum(input);
+        int[] input = new int[]{3,4,6,7};
+        test.triangleCount(input);
 
     }
 
@@ -259,58 +259,48 @@ public class Test {
     }
 
     /**
-     * @param nums: an integer array
-     * @param target: An integer
-     * @return: the difference between the sum and the target
+     * @param S: A list of integers
+     * @return: An integer
      */
-    public int twoSumClosest(int[] nums, int target) {
-        int result = Integer.MAX_VALUE;
+    public int triangleCount(int[] S) {
+        // write your code here
+        int result = 0;
+        Arrays.sort(S);
 
-        Arrays.sort(nums);
-        int start = 0;
-        int end = nums.length - 1;
-        while (start < end) {
-            int sum = nums[start] + nums[end];
-            int difference = Math.abs(target - sum);
-            result = Math.min(difference, result);
-            if (sum <= target) {
-                start++;
-            } else {
-                result = Math.min(difference, result);
-                end--;
+        for (int i = 0; i < S.length - 1; i++) {
+            int start = 0;
+            int end = i - 1;
+            while (start < end) {
+                if (S[start] +  S[end] > S[i]) {
+                    result += (start - end);
+                    end--;
+                }else {
+                    start++;
+                }
             }
         }
-
         return result;
     }
 
-    /**
-     * @param numbers: Give an array numbers of n integer
-     * @param target: An integer
-     * @return: return the sum of the three integers, the sum closest target.
-     */
-    public int threeSumClosest(int[] numbers, int target) {
-        Arrays.sort(numbers);
-        int result = 0;
-        int difference = Integer.MAX_VALUE;
+	/**
+	 * @param nums: an array of integer
+	 * @param target: an integer
+	 * @return: an integer
+	 */
+	public int twoSum5(int[] nums, int target) {
+		Arrays.sort(nums);
+		int result = 0;
 
-        for (int i = 0; i < numbers.length - 1; i++) {
-            int start = i + 1;
-            int end = numbers.length - 1;
-            while (start < end) {
-                int sum = numbers[i] + numbers[start] + numbers[end];
-                if (Math.abs(sum - target) < difference) {
-                    difference = Math.abs(sum - target);
-                    result = sum;
-                }
-
-                if (sum < target) {
-                    start++;
-                } else {
-                    end--;
-                }
-            }
-        }
+		int start = 0;
+		int end = nums.length - 1;
+		while (start < end) {
+			if (nums[start] + nums[end] <= target) {
+				result += (end - start);
+				start++;
+			} else {
+				end--;
+			}
+		}
 
         return result;
     }
