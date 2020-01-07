@@ -1,5 +1,6 @@
 package DivideConquer;
 
+import TwoPointers.ListNode;
 import leetcode.BFS.TreeNode;
 
 import java.util.*;
@@ -205,8 +206,8 @@ public class Test {
 //        } else {
 //            System.out.println("false");
 //        }
-        int[] input = new int[]{3,4,6,7};
-        test.triangleCount(input);
+        int[] input = new int[]{1,3,1,4,4,2};
+        test.deduplication(input);
 
     }
 
@@ -449,5 +450,52 @@ public class Test {
 				end--;
 			}
 		}
+	}
+
+	/**
+	 * @param head: the head of linked list.
+	 * @return: a middle node of the linked list
+	 */
+	public ListNode middleNode(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		// write your code here
+		ListNode slow = head;
+		ListNode fast = head;
+		while (fast.next != null && fast.next.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+		}
+
+		return slow;
+	}
+
+	public void moveZeroes(int[] nums) {
+		// write your code here
+		int i = 0;
+		for (int j = 0; j < nums.length; j++) {
+			if (nums[j] != 0) {
+				int temp = nums[i];
+				nums[i] = nums[j];
+				nums[j] = temp;
+				i++;
+			}
+		}
+	}
+
+	public int deduplication(int[] nums) {
+		// write your code here
+		Arrays.sort(nums);
+		int i = 0;
+		for (int j = 0; j < nums.length; j++) {
+			if (nums[i] != nums[j]) {
+				i++;
+				nums[i] = nums[j];
+
+
+			}
+		}
+		return i;
 	}
 }
