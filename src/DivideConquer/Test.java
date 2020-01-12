@@ -585,4 +585,39 @@ public class Test {
 
 		return result;
 	}
+
+	public boolean wordPatternMatch(String pattern, String str) {
+		Map<Character, String> map = new HashMap<>();
+		Set<String> set = new HashSet<>();
+		return wordPatternMatchHelper(pattern, str, map, set);
+	}
+
+	private boolean wordPatternMatchHelper(String pattern, String str, Map<Character, String> map, Set<String> set) {
+		if (pattern.length() == 0) {
+			return str.length() == 0;
+		}
+		char currentChar = pattern.charAt(0);
+		if (map.containsKey(currentChar)) {
+			String matchStr = map.get(currentChar);
+			if (matchStr.equals(str.substring(0, matchStr.length()))) {
+				pattern = pattern.substring(1);
+				str = str.substring(matchStr.length());
+				return wordPatternMatchHelper(pattern, str, map, set);
+			}
+		}
+		for (int i = 1; i < str.length(); i++) {
+			String matchStr = str.substring(0, i);
+			if (set.contains(matchStr)) {
+				continue;
+			}
+			map.put(currentChar, matchStr);
+			set.add(matchStr);
+			if (wordPatternMatchHelper(pattern, str, map, set)) {
+				return true;
+			}
+			map.remove(currentChar);
+			set.remove(matchStr);
+		}
+		return false;
+	}
 }
