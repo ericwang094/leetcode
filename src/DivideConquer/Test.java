@@ -206,8 +206,8 @@ public class Test {
 //        } else {
 //            System.out.println("false");
 //        }
-        int[] input = new int[]{1,3,1,4,4,2};
-        test.deduplication(input);
+        int[] input = new int[]{3,4,6,7};
+        test.triangleCount(input);
 
     }
 
@@ -497,5 +497,92 @@ public class Test {
 			}
 		}
 		return i;
+	}
+
+	/**
+	 * @param n: An integer
+	 * @param nums: An array
+	 * @return: the Kth largest element
+	 */
+	public int kthLargestElement(int n, int[] nums) {
+		if (nums == null) {
+			return -1;
+		}
+
+		return quickSort(nums, 0, nums.length - 1, n - 1);
+	}
+
+	private int quickSort(int[] nums, int start, int end, int k) {
+		if (start >= end) {
+			return nums[k];
+		}
+
+		int left = start, right = end;
+		int mean = nums[(left + right) / 2];
+
+		while (left <= right) {
+			while (nums[left] <= nums[mean]) {
+				left++;
+			}
+
+			while (nums[right] >= nums[mean]) {
+				right++;
+			}
+
+			if (left <= right) {
+				int temp = nums[left];
+				nums[left] = nums[right];
+				nums[right] = temp;
+
+				left++;
+				right--;
+			}
+		}
+
+		if (k <= right) {
+			return quickSort(nums, start, right, k);
+		} if (k >= left) {
+			return quickSort(nums, left, end, k);
+		}
+
+		return nums[k];
+
+	}
+
+	/**
+	 * @param nums: a list of integers.
+	 * @param k: length of window.
+	 * @return: the sum of the element inside the window at each moving.
+	 */
+	public int[] winSum(int[] nums, int k) {
+		List<Integer> list = new ArrayList<>();
+		if (nums == null || nums.length == 0 || nums.length < k) {
+			return new int[]{};
+		}
+
+		int start = 0;
+		int end = start + k - 1;
+		int firstSum = 0;
+		for (int i = 0; i <= end; i++) {
+			firstSum += nums[i];
+		}
+		list.add(firstSum);
+		start++;
+		end++;
+
+		while (end < nums.length) {
+			int newSum = firstSum - nums[start-1] + nums[end];
+			firstSum = newSum;
+			list.add(newSum);
+			start++;
+			end++;
+		}
+
+		int[] result = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			result[i] = list.get(i);
+		}
+
+		return result;
 	}
 }
