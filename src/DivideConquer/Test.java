@@ -772,4 +772,65 @@ public class Test {
 		}
 		return false;
 	}
+
+	/*
+	 * @param start: a string
+	 * @param end: a string
+	 * @param dict: a set of string
+	 * @return: a list of lists of string
+	 */
+	public List<List<String>> findLadders(String start, String end, Set<String> dict) {
+		Set<String> set = new HashSet<>();
+		set.add(start);
+		set.add(end);
+		List<List<String>> list = new ArrayList<>();
+		List<String> tempResult = new ArrayList<>();
+		if (start.equals(end)) {
+			tempResult.add(start);
+			tempResult.add(end);
+			list.add(tempResult);
+			return list;
+		}
+
+		Stack<String> wordStack = new Stack<>();
+		wordStack.add(start);
+		while (!wordStack.isEmpty()) {
+			String currentWord = wordStack.pop();
+			List<String> nextWords = findNextWord(currentWord, dict);
+			for (String word : nextWords) {
+				if (set.contains(word)) {
+					continue;
+				}
+
+				wordStack.add(word);
+			}
+		}
+		return list;
+	}
+
+	private void findLaddersHelper(String start, String end, Set<String> dict,
+	                               Set<String> set, List<String> tempResult, List<List<String>> list) {
+
+	}
+
+	private List<String> findNextWord(String word, Set<String> dict) {
+		List<String> result = new ArrayList<>();
+		char[] wordArray = word.toCharArray();
+		for (int i = 0; i < wordArray.length; i++) {
+			char[] newWord = wordArray;
+			for (char j = 'a'; j <= 'z'; j++) {
+				if (newWord[i] == j) {
+					continue;
+				}
+				newWord[i] = j;
+				String newWordString = new String(newWord);
+				if (!dict.contains(newWordString)) {
+					continue;
+				}
+				result.add(newWordString);
+			}
+		}
+
+		return result;
+	}
 }
