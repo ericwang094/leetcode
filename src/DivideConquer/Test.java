@@ -187,8 +187,6 @@ public class Test {
         return result;
     }
 
-
-
     /**
      * @param numbers: Give an array numbers of n integer
      * @return: Find all unique triplets in the array which gives the sum of zero.
@@ -477,6 +475,182 @@ public class Test {
 		return i;
 	}
 
+	/*
+	 * @param : a string to be split
+	 * @return: all possible split string array
+	 */
+	public List<List<String>> splitString(String s) {
+		List<List<String>> result = new ArrayList<>();
+		splitStringHelper(s, 0, new ArrayList<>(), result);
+		return result;
+	}
+
+	private void splitStringHelper(String s, int index, List<String> current, List<List<String>> result) {
+		if (index == s.length()) {
+			result.add(new ArrayList<>(current));
+		} else {
+			current.add(s.substring(index, index + 1));
+			splitStringHelper(s, index + 1, current, result);
+			current.remove(current.size() - 1);
+
+			if (index < s.length() - 1) {
+				current.add(s.substring(index, index + 2));
+				splitStringHelper(s, index + 2, current, result);
+				current.remove(current.size() - 1);
+			}
+		}
+	}
+
+	/**
+	 * @param digits: A digital string
+	 * @return: all posible letter combinations
+	 */
+	public List<String> letterCombinations(String digits) {
+		Map<Character, Character[]> map = new HashMap<Character, Character[]>();
+		map.put('2', new Character[]{'a', 'b', 'c'});
+		map.put('3', new Character[]{'d', 'e', 'f'});
+		map.put('4', new Character[]{'g', 'h', 'i'});
+		map.put('5', new Character[]{'j', 'k', 'l'});
+		map.put('6', new Character[]{'m', 'n', 'o'});
+		map.put('7', new Character[]{'p', 'q', 'r', 's'});
+		map.put('8', new Character[]{'t', 'u', 'v'});
+		map.put('9', new Character[]{'w', 'x', 'y', 'z'});
+
+		List<String> result = new ArrayList<>();
+		if (digits.equals("")) {
+			return result;
+		}
+
+		letterCombinationsHelper(digits, "", result, map);
+		return result;
+	}
+
+	private void letterCombinationsHelper(String digits, String tempResult, List<String> result, Map<Character, Character[]> map) {
+		if (tempResult.length() == digits.length()) {
+			result.add(tempResult);
+		} else {
+			char currentChar = digits.charAt(tempResult.length());
+			Character[] allPossibleChar = map.get(currentChar);
+			for (int i = 0; i < allPossibleChar.length; i++) {
+				tempResult += allPossibleChar[i];
+				letterCombinationsHelper(digits, tempResult, result, map);
+				tempResult = tempResult.substring(0, tempResult.length() - 1);
+			}
+		}
+	}
+
+	public List<List<Integer>> combinationSum(int[] candidates, int target) {
+		Arrays.sort(candidates);
+		// write your code here
+		List<List<Integer>> result = new ArrayList<>();
+		if (candidates.length == 0) {
+			return result;
+		}
+		combinationSumHelper(candidates, result, new ArrayList<>(), target, 0);
+		return result;
+	}
+
+	private void combinationSumHelper(int[] candidates, List<List<Integer>> result, List<Integer> tempList, int target, int index) {
+		if (target == 0) {
+			result.add(new ArrayList<>(tempList));
+		} else {
+			for (int i = index; i < candidates.length; i++) {
+				if (i > 0 && candidates[i] == candidates[i - 1]) {
+					continue;
+				}
+				tempList.add(candidates[i]);
+				combinationSumHelper(candidates, result, tempList, target - candidates[i], index + 1);
+				tempList.remove(tempList.size() - 1);
+			}
+		}
+	}
+
+	/*
+	 * @param n: The number of queens
+	 * @return: All distinct solutions
+	 */
+	public List<List<String>> solveNQueens(int n) {
+		List<List<String>> result = new ArrayList<>();
+		List<Integer> tempResult = new ArrayList<>();
+		nQueenHelper(n, result, tempResult);
+		return result;
+	}
+
+	private void nQueenHelper(int n, List<List<String>> result, List<Integer> tempResult) {
+		if (tempResult.size() == n) {
+			List<String> solution = convertIntegerToStringList(n, tempResult);
+			result.add(solution);
+		} else {
+			for (int i = 0; i < n; i++) {
+				if (!isValidPlacement(tempResult, i)) {
+					continue;
+				}
+				tempResult.add(i);
+				nQueenHelper(n, result, tempResult);
+				tempResult.remove(tempResult.size() - 1);
+			}
+		}
+	}
+
+	private boolean isValidPlacement(List<Integer> tempResult, int place) {
+		for (int i = 0; i < tempResult.size(); i++) {
+			int diff = Math.abs(tempResult.get(i) - place);
+			if (diff == 0 || diff == tempResult.size() - i) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private List<String> convertIntegerToStringList (int n, List<Integer> tempResult) {
+		List<String> result = new ArrayList<>();
+		for (int i = 0; i < tempResult.size(); i++) {
+			int currentNum = tempResult.get(i);
+			StringBuilder sb = new StringBuilder();
+			for (int j = 0; j < n; j++) {
+				if (j == currentNum) {
+					sb.append("Q");
+				} else {
+					sb.append(".");
+				}
+			}
+			result.add(sb.toString());
+		}
+
+		return result;
+	}
+
+	/**
+	 * @param nums: A set of numbers
+	 * @return: A list of lists
+	 */
+	public List<List<Integer>> subsets(int[] nums) {
+		List<List<Integer>> result = new ArrayList<>();
+		List<Integer> tempResult = new ArrayList<>();
+		if (nums.length == 0) {
+			return result;
+		}
+
+		Arrays.sort(nums);
+		for (int i = 0; i < nums.length; i++) {
+			subsetHelper(nums, result, tempResult, i, 0);
+		}
+		return result;
+	}
+
+	private void subsetHelper(int[] nums, List<List<Integer>> result, List<Integer> tempResult, int size, int index) {
+		if (tempResult.size() == size) {
+			result.add(new ArrayList<>(tempResult));
+		} else {
+			for (int i = index; i < nums.length; i++) {
+				tempResult.add(nums[i]);
+				subsetHelper(nums, result, tempResult, size, i + 1);
+				tempResult.remove(tempResult.size() - 1);
+			}
+		}
+	}
+
 	/**
 	 * @param n: An integer
 	 * @param nums: An array
@@ -583,14 +757,14 @@ public class Test {
 				return wordPatternMatchHelper(pattern, str, map, set);
 			}
 		}
-		for (int i = 1; i <= str.length(); i++) {
+		for (int i = 1; i < str.length(); i++) {
 			String matchStr = str.substring(0, i);
 			if (set.contains(matchStr)) {
 				continue;
 			}
 			map.put(currentChar, matchStr);
 			set.add(matchStr);
-			if (wordPatternMatchHelper(pattern.substring(1), str.substring(matchStr.length()), map, set)) {
+			if (wordPatternMatchHelper(pattern, str, map, set)) {
 				return true;
 			}
 			map.remove(currentChar);
@@ -599,27 +773,64 @@ public class Test {
 		return false;
 	}
 
-	public static void main(String[] args) {
-		Test test = new Test();
-//        TreeNode input = new TreeNode(4);
-//        input.left = new TreeNode(3);
-//
-//        input.right = new TreeNode(7);
-//        input.right.left = new TreeNode(5);
-//        input.right.right = new TreeNode(6);
+	/*
+	 * @param start: a string
+	 * @param end: a string
+	 * @param dict: a set of string
+	 * @return: a list of lists of string
+	 */
+	public List<List<String>> findLadders(String start, String end, Set<String> dict) {
+		Set<String> set = new HashSet<>();
+		set.add(start);
+		set.add(end);
+		List<List<String>> list = new ArrayList<>();
+		List<String> tempResult = new ArrayList<>();
+		if (start.equals(end)) {
+			tempResult.add(start);
+			tempResult.add(end);
+			list.add(tempResult);
+			return list;
+		}
 
-//        TreeNode input = new TreeNode(2);
-//        input.left = new TreeNode(1);
-//        input.right = new TreeNode(2);
-//
-//        boolean result = test.isValidBST2(input);
-//        if (result) {
-//            System.out.println("true");
-//        } else {
-//            System.out.println("false");
-//        }
-//		int[] input = new int[]{3,4,6,7};
-		test.wordPatternMatch("lwpstyfsjf", "htkvcxwxkymrvrpcxw");
+		Stack<String> wordStack = new Stack<>();
+		wordStack.add(start);
+		while (!wordStack.isEmpty()) {
+			String currentWord = wordStack.pop();
+			List<String> nextWords = findNextWord(currentWord, dict);
+			for (String word : nextWords) {
+				if (set.contains(word)) {
+					continue;
+				}
 
+				wordStack.add(word);
+			}
+		}
+		return list;
+	}
+
+	private void findLaddersHelper(String start, String end, Set<String> dict,
+	                               Set<String> set, List<String> tempResult, List<List<String>> list) {
+
+	}
+
+	private List<String> findNextWord(String word, Set<String> dict) {
+		List<String> result = new ArrayList<>();
+		char[] wordArray = word.toCharArray();
+		for (int i = 0; i < wordArray.length; i++) {
+			char[] newWord = wordArray;
+			for (char j = 'a'; j <= 'z'; j++) {
+				if (newWord[i] == j) {
+					continue;
+				}
+				newWord[i] = j;
+				String newWordString = new String(newWord);
+				if (!dict.contains(newWordString)) {
+					continue;
+				}
+				result.add(newWordString);
+			}
+		}
+
+		return result;
 	}
 }
