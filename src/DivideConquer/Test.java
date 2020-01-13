@@ -187,8 +187,6 @@ public class Test {
         return result;
     }
 
-
-
     /**
      * @param numbers: Give an array numbers of n integer
      * @return: Find all unique triplets in the array which gives the sum of zero.
@@ -653,27 +651,125 @@ public class Test {
 		}
 	}
 
-	public static void main(String[] args) {
-		Test test = new Test();
-//        TreeNode input = new TreeNode(4);
-//        input.left = new TreeNode(3);
-//
-//        input.right = new TreeNode(7);
-//        input.right.left = new TreeNode(5);
-//        input.right.right = new TreeNode(6);
+	/**
+	 * @param n: An integer
+	 * @param nums: An array
+	 * @return: the Kth largest element
+	 */
+	public int kthLargestElement(int n, int[] nums) {
+		if (nums == null) {
+			return -1;
+		}
 
-//        TreeNode input = new TreeNode(2);
-//        input.left = new TreeNode(1);
-//        input.right = new TreeNode(2);
-//
-//        boolean result = test.isValidBST2(input);
-//        if (result) {
-//            System.out.println("true");
-//        } else {
-//            System.out.println("false");
-//        }
-		int[] input = new int[]{2,3,6,7};
-		test.solveNQueens(3);
+		return quickSort(nums, 0, nums.length - 1, n - 1);
+	}
 
+	private int quickSort(int[] nums, int start, int end, int k) {
+		if (start >= end) {
+			return nums[k];
+		}
+
+		int left = start, right = end;
+		int mean = nums[(left + right) / 2];
+
+		while (left <= right) {
+			while (nums[left] <= nums[mean]) {
+				left++;
+			}
+
+			while (nums[right] >= nums[mean]) {
+				right++;
+			}
+
+			if (left <= right) {
+				int temp = nums[left];
+				nums[left] = nums[right];
+				nums[right] = temp;
+
+				left++;
+				right--;
+			}
+		}
+
+		if (k <= right) {
+			return quickSort(nums, start, right, k);
+		} if (k >= left) {
+			return quickSort(nums, left, end, k);
+		}
+
+		return nums[k];
+
+	}
+
+	/**
+	 * @param nums: a list of integers.
+	 * @param k: length of window.
+	 * @return: the sum of the element inside the window at each moving.
+	 */
+	public int[] winSum(int[] nums, int k) {
+		List<Integer> list = new ArrayList<>();
+		if (nums == null || nums.length == 0 || nums.length < k) {
+			return new int[]{};
+		}
+
+		int start = 0;
+		int end = start + k - 1;
+		int firstSum = 0;
+		for (int i = 0; i <= end; i++) {
+			firstSum += nums[i];
+		}
+		list.add(firstSum);
+		start++;
+		end++;
+
+		while (end < nums.length) {
+			int newSum = firstSum - nums[start-1] + nums[end];
+			firstSum = newSum;
+			list.add(newSum);
+			start++;
+			end++;
+		}
+
+		int[] result = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			result[i] = list.get(i);
+		}
+
+		return result;
+	}
+
+	public boolean wordPatternMatch(String pattern, String str) {
+		Map<Character, String> map = new HashMap<>();
+		Set<String> set = new HashSet<>();
+		return wordPatternMatchHelper(pattern, str, map, set);
+	}
+
+	private boolean wordPatternMatchHelper(String pattern, String str, Map<Character, String> map, Set<String> set) {
+		if (pattern.length() == 0) {
+			return str.length() == 0;
+		}
+		char currentChar = pattern.charAt(0);
+		if (map.containsKey(currentChar)) {
+			String matchStr = map.get(currentChar);
+			if (matchStr.equals(str.substring(0, matchStr.length()))) {
+				pattern = pattern.substring(1);
+				str = str.substring(matchStr.length());
+				return wordPatternMatchHelper(pattern, str, map, set);
+			}
+		}
+		for (int i = 1; i < str.length(); i++) {
+			String matchStr = str.substring(0, i);
+			if (set.contains(matchStr)) {
+				continue;
+			}
+			map.put(currentChar, matchStr);
+			set.add(matchStr);
+			if (wordPatternMatchHelper(pattern, str, map, set)) {
+				return true;
+			}
+			map.remove(currentChar);
+			set.remove(matchStr);
+		}
+		return false;
 	}
 }
