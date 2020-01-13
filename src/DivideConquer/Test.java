@@ -187,29 +187,7 @@ public class Test {
         return result;
     }
 
-    public static void main(String[] args) {
-        Test test = new Test();
-//        TreeNode input = new TreeNode(4);
-//        input.left = new TreeNode(3);
-//
-//        input.right = new TreeNode(7);
-//        input.right.left = new TreeNode(5);
-//        input.right.right = new TreeNode(6);
 
-//        TreeNode input = new TreeNode(2);
-//        input.left = new TreeNode(1);
-//        input.right = new TreeNode(2);
-//
-//        boolean result = test.isValidBST2(input);
-//        if (result) {
-//            System.out.println("true");
-//        } else {
-//            System.out.println("false");
-//        }
-        int[] input = new int[]{3,4,6,7};
-        test.triangleCount(input);
-
-    }
 
     /**
      * @param numbers: Give an array numbers of n integer
@@ -605,19 +583,43 @@ public class Test {
 				return wordPatternMatchHelper(pattern, str, map, set);
 			}
 		}
-		for (int i = 1; i < str.length(); i++) {
+		for (int i = 1; i <= str.length(); i++) {
 			String matchStr = str.substring(0, i);
 			if (set.contains(matchStr)) {
 				continue;
 			}
 			map.put(currentChar, matchStr);
 			set.add(matchStr);
-			if (wordPatternMatchHelper(pattern, str, map, set)) {
+			if (wordPatternMatchHelper(pattern.substring(1), str.substring(matchStr.length()), map, set)) {
 				return true;
 			}
 			map.remove(currentChar);
 			set.remove(matchStr);
 		}
 		return false;
+	}
+
+	public static void main(String[] args) {
+		Test test = new Test();
+//        TreeNode input = new TreeNode(4);
+//        input.left = new TreeNode(3);
+//
+//        input.right = new TreeNode(7);
+//        input.right.left = new TreeNode(5);
+//        input.right.right = new TreeNode(6);
+
+//        TreeNode input = new TreeNode(2);
+//        input.left = new TreeNode(1);
+//        input.right = new TreeNode(2);
+//
+//        boolean result = test.isValidBST2(input);
+//        if (result) {
+//            System.out.println("true");
+//        } else {
+//            System.out.println("false");
+//        }
+//		int[] input = new int[]{3,4,6,7};
+		test.wordPatternMatch("lwpstyfsjf", "htkvcxwxkymrvrpcxw");
+
 	}
 }
