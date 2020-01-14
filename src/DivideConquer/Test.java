@@ -780,77 +780,84 @@ public class Test {
 	 * @return: a list of lists of string
 	 */
 	public List<List<String>> findLadders(String start, String end, Set<String> dict) {
-		List<List<String>> ladders = new ArrayList<List<String>>();
-		Map<String, List<String>> map = new HashMap<String, List<String>>();
-		Map<String, Integer> distance = new HashMap<String, Integer>();
+		Map<String, List<String>> mapWordToParents = new HashMap<>();
+		Map<String, Integer> distance = new HashMap<>();
 
 		dict.add(start);
 		dict.add(end);
 
-		bfs(map, distance, end, start, dict);
+		bfs(mapWordToParents, distance, start, end, dict);
+		List<List<String>> ladders = new ArrayList<>();
 		List<String> path = new ArrayList<>();
-		dfs(ladders, path, start, end, distance, map);
-
+		path.add(start);
+		dfs(ladders, path, start, end, distance, mapWordToParents);
 		return ladders;
 	}
 
 	private void dfs(List<List<String>> ladders, List<String> path, String crt, String end,
-	            Map<String, Integer> distance, Map<String, List<String>> map) {
-		path.add(crt);
+	            Map<String, Integer> distance, Map<String, List<String>> mapWordToParents) {
 		if (crt.equals(end)) {
 			ladders.add(new ArrayList<>(path));
 		} else {
-			for (String next : map.get(crt)) {
-				if (distance.containsKey(next) &&
-						distance.get(crt) == distance.get(next) + 1) {
-					dfs(ladders, path, next, end, distance, map);
+			path.add(crt);
+			for (String nextWord : mapWordToParents.get(crt)) {
+				if (distance.get(crt) == distance.get(nextWord) + 1) {
+					dfs(ladders, path, nextWord, end, distance, mapWordToParents);
 				}
 			}
+			path.remove(path.size() - 1);
 		}
-		path.remove(path.size() - 1);
 	}
 
 	private void bfs(Map<String, List<String>> map, Map<String, Integer> distance,
 	                 String start, String end, Set<String> dict) {
-		Queue<String> q = new LinkedList<>();
-		q.offer(start);
-		distance.put(start, 0);
+		Queue<String> queue = new LinkedList<>();
 		for (String s : dict) {
-			map.put(s, new ArrayList<String>());
+			map.put(s, new ArrayList<>());
 		}
 
-		while (!q.isEmpty()) {
-			String crt = q.poll();
-
-			List<String> nextList = findNextWord(crt, dict);
-			for (String next : nextList) {
-				map.get(next).add(crt);
-				if (!distance.containsKey(next)) {
-					distance.put(next, distance.get(crt) + 1);
-					q.offer(next);
+		queue.add(start);
+		while (!queue.isEmpty()) {
+			String currentWord = queue.poll();
+			List<String> list = findNextWord(currentWord, dict);
+			for (String nextWord : list) {
+				map.get(currentWord).add(nextWord);
+				if (!distance.containsKey(nextWord)) {
+					distance.put(nextWord, 1);
+				} else {
+					distance.put(nextWord, distance.get(nextWord) + 1);
 				}
 			}
 		}
 	}
 
 	private List<String> findNextWord(String word, Set<String> dict) {
-		List<String> result = new ArrayList<>();
-		char[] wordArray = word.toCharArray();
-		for (int i = 0; i < wordArray.length; i++) {
-			char[] newWord = wordArray.clone();
+		ArrayList<String> result = new ArrayList<>();
+		for (int i = 0; i < word.length(); i++) {
 			for (char j = 'a'; j <= 'z'; j++) {
-				if (newWord[i] == j) {
+				char[] wordArray = word.toCharArray();
+				if (wordArray[i] == j) {
 					continue;
 				}
-				newWord[i] = j;
-				String newWordString = new String(newWord);
-				if (!dict.contains(newWordString)) {
+
+				wordArray[i] = j;
+				String wordString = new String(wordArray);
+				if (!dict.contains(wordString)) {
 					continue;
 				}
-				result.add(newWordString);
+				result.add(wordString);
 			}
 		}
-
 		return result;
+	}
+
+	public static void main(String[] args) {
+		Test t = new Test();
+		Set<String> set = new HashSet<>();
+		set.add("a");
+		set.add("b");
+		set.add("c");
+
+		t.findLadders("a", "c", set);
 	}
 }
