@@ -796,16 +796,18 @@ public class Test {
 
 	private void dfs(List<List<String>> ladders, List<String> path, String crt, String end,
 	            Map<String, Integer> distance, Map<String, List<String>> mapWordToParents) {
+
 		if (crt.equals(end)) {
 			ladders.add(new ArrayList<>(path));
 		} else {
-			path.add(crt);
 			for (String nextWord : mapWordToParents.get(crt)) {
-				if (distance.get(crt) == distance.get(nextWord) + 1) {
+				if (distance.get(nextWord) == distance.get(crt) + 1) {
+					path.add(crt);
 					dfs(ladders, path, nextWord, end, distance, mapWordToParents);
+					path.remove(path.size() - 1);
+
 				}
 			}
-			path.remove(path.size() - 1);
 		}
 	}
 
@@ -817,38 +819,36 @@ public class Test {
 		}
 
 		queue.add(start);
+		distance.put(start ,0);
 		while (!queue.isEmpty()) {
 			String currentWord = queue.poll();
 			List<String> list = findNextWord(currentWord, dict);
 			for (String nextWord : list) {
-				map.get(currentWord).add(nextWord);
+				map.get(nextWord).add(currentWord);
 				if (!distance.containsKey(nextWord)) {
-					distance.put(nextWord, 1);
-				} else {
-					distance.put(nextWord, distance.get(nextWord) + 1);
+					distance.put(nextWord, distance.get(currentWord) + 1);
+					queue.add(nextWord);
 				}
 			}
 		}
 	}
 
-	private List<String> findNextWord(String word, Set<String> dict) {
-		ArrayList<String> result = new ArrayList<>();
-		for (int i = 0; i < word.length(); i++) {
-			for (char j = 'a'; j <= 'z'; j++) {
-				char[] wordArray = word.toCharArray();
-				if (wordArray[i] == j) {
-					continue;
-				}
+	private List<String> findNextWord(String crt, Set<String> dict) {
+		List<String> expansion = new ArrayList<String>();
 
-				wordArray[i] = j;
-				String wordString = new String(wordArray);
-				if (!dict.contains(wordString)) {
-					continue;
+		for (int i = 0; i < crt.length(); i++) {
+			for (char ch = 'a'; ch <= 'z'; ch++) {
+				if (ch != crt.charAt(i)) {
+					String expanded = crt.substring(0, i) + ch
+							+ crt.substring(i + 1);
+					if (dict.contains(expanded)) {
+						expansion.add(expanded);
+					}
 				}
-				result.add(wordString);
 			}
 		}
-		return result;
+
+		return expansion;
 	}
 
 	public static void main(String[] args) {

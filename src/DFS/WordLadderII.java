@@ -51,7 +51,7 @@ public class WordLadderII {
 
             List<String> nextList = expand(crt, dict);
             for (String next : nextList) {
-                map.get(next).add(crt);
+                map.get(crt).add(next);
                 if (!distance.containsKey(next)) {
                     distance.put(next, distance.get(crt) + 1);
                     q.offer(next);
@@ -76,5 +76,15 @@ public class WordLadderII {
         }
 
         return expansion;
+    }
+
+    public static void main(String[] args) {
+	    WordLadderII wp = new WordLadderII();
+        Set<String> set = new HashSet<>();
+        set.add("a");
+        set.add("b");
+        set.add("c");
+
+        wp.findLadders("a", "c", set);
     }
 }
