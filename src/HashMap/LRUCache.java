@@ -4,72 +4,68 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LRUCache {
-    private Map<Integer, ListNode> keyToPrev;
-    private int size, capacity;
-    private ListNode tail, dummy;
+	private int capacity, size;
+	private ListNode dummy, tail;
+	private Map<Integer, ListNode> keyToPrev;
 
+	public LRUCache(int capacity) {
+		this.capacity = capacity;
+		this.keyToPrev = new HashMap<Integer, ListNode>();
+		this.dummy = new ListNode(0, 0);
+		this.tail = this.dummy;
+	}
 
-    public LRUCache(int capacity) {
-        this.capacity = capacity;
-        this.keyToPrev = new HashMap<Integer, ListNode>();
-        this.dummy = new ListNode(0, 0);
-        this.tail = dummy;
-    }
+	public int get(int key) {
+		if (!keyToPrev.containsKey(key)) {
+			return -1;
+		}
 
-    private void moveToTail(int key) {
-        ListNode prev = this.keyToPrev.get(key);
-        ListNode curr = prev.next;
-        if (curr == tail) {
-            return;
-        }
+		moveToTail(key);
+		return tail.val;
+	}
 
-        prev.next = prev.next.next;
-        if (prev.next != null) {
-            keyToPrev.put(prev.next.key, prev);
-        }
+	private void moveToTail(int key) {
+		ListNode prev = keyToPrev.get(key);
+		ListNode curt = prev.next;
 
-        tail.next = curr;
-        keyToPrev.put(curr.key, tail);
+		if (curt == tail) {
+			return;
+		}
 
-        this.tail = curr;
-    }
+		prev.next = prev.next.next;
+		tail.next = curt;
 
-    public int get(int key) {
-        if (!keyToPrev.containsKey(key)) {
-            return -1;
-        }
+		if (prev.next != null) {
+			keyToPrev.put(prev.next.key, prev);
+		}
+		keyToPrev.put(curt.key, tail);
+		tail = curt;
+	}
 
-        this.moveToTail(key);
+	public void set(int key, int value) {
+		if (get(key) != -1) {
+			ListNode prev = keyToPrev.get(key);
+			prev.next.val = value;
+			return;
+		}
 
-        return this.tail.val;
-    }
+		if (size < capacity) {
+			size++;
+			ListNode curt = new ListNode(key, value);
+			tail.next = curt;
+			keyToPrev.put(key, tail);
 
-    public void set(int key, int value) {
-        if (this.get(key) != -1) {
-            ListNode node = keyToPrev.get(key).next;
-            node.val = value;
-            return;
-        }
+			tail = curt;
+			return;
+		}
 
-        if (size < capacity) {
-            size++;
-            ListNode node = new ListNode(key, value);
-            tail.next = node;
+		ListNode first = dummy.next;
+		keyToPrev.remove(first.key);
 
-            keyToPrev.put(key, tail);
+		first.key = key;
+		first.val = value;
+		keyToPrev.put(key, dummy);
 
-            this.tail = node;
-            return;
-        }
-
-        ListNode first = dummy.next;
-        keyToPrev.remove(first.key);
-
-        first.key = key;
-        first.val = value;
-
-        keyToPrev.put(key, dummy);
-
-        moveToTail(key);
-    }
+		moveToTail(key);
+	}
 }
