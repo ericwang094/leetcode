@@ -773,83 +773,76 @@ public class Test {
 		return false;
 	}
 
-	/*
-	 * @param start: a string
-	 * @param end: a string
-	 * @param dict: a set of string
-	 * @return: a list of lists of string
-	 */
 	public List<List<String>> findLadders(String start, String end, Set<String> dict) {
-		Map<String, List<String>> mapWordToParents = new HashMap<>();
-		Map<String, Integer> distance = new HashMap<>();
-
+		Map<String, Integer> distance = new HashMap<String, Integer>();
+		Map<String, List<String>> parentToNextWord = new HashMap<>();
 		dict.add(start);
 		dict.add(end);
 
-		bfs(mapWordToParents, distance, start, end, dict);
-		List<List<String>> ladders = new ArrayList<>();
-		List<String> path = new ArrayList<>();
-		path.add(start);
-		dfs(ladders, path, start, end, distance, mapWordToParents);
-		return ladders;
+		bfs(start, end, dict, distance, parentToNextWord);
+		List<List<String>> result = new ArrayList<>();
+		dfs(start, end, distance, parentToNextWord, new ArrayList<>(), result);
+
+		return result;
 	}
 
-	private void dfs(List<List<String>> ladders, List<String> path, String crt, String end,
-	            Map<String, Integer> distance, Map<String, List<String>> mapWordToParents) {
+	private void bfs(String start, String end, Set<String> dict, Map<String, Integer> distance,
+	                 Map<String, List<String>> parentToNextWord) {
+		distance.put(start, 0);
 
-		if (crt.equals(end)) {
-			ladders.add(new ArrayList<>(path));
-		} else {
-			for (String nextWord : mapWordToParents.get(crt)) {
-				if (distance.get(nextWord) == distance.get(crt) + 1) {
-					path.add(crt);
-					dfs(ladders, path, nextWord, end, distance, mapWordToParents);
-					path.remove(path.size() - 1);
-
-				}
-			}
+		for (String word : dict) {
+			parentToNextWord.put(word, new ArrayList<>());
 		}
-	}
 
-	private void bfs(Map<String, List<String>> map, Map<String, Integer> distance,
-	                 String start, String end, Set<String> dict) {
 		Queue<String> queue = new LinkedList<>();
-		for (String s : dict) {
-			map.put(s, new ArrayList<>());
-		}
-
 		queue.add(start);
-		distance.put(start ,0);
+
 		while (!queue.isEmpty()) {
-			String currentWord = queue.poll();
-			List<String> list = findNextWord(currentWord, dict);
-			for (String nextWord : list) {
-				map.get(nextWord).add(currentWord);
+			String word = queue.poll();
+			List<String> nextWords = findNextWords(word, dict);
+			for (String nextWord : nextWords) {
+				parentToNextWord.get(word).add(nextWord);
 				if (!distance.containsKey(nextWord)) {
-					distance.put(nextWord, distance.get(currentWord) + 1);
+					distance.put(nextWord, distance.get(word) + 1);
 					queue.add(nextWord);
 				}
 			}
 		}
 	}
 
+	private void dfs(String start, String end, Map<String, Integer> distance,
+	                 Map<String, List<String>> parentToNextWord, List<String> tempResult, List<List<String>> result) {
+		tempResult.add(start);
+		if (start.equals(end)) {
+			result.add(new ArrayList<>(tempResult));
+		} else {
+			List<String> nextWords = parentToNextWord.get(start);
+			for (String nextWord : nextWords) {
+				if (distance.get(start) + 1 == distance.get(nextWord)) {
+					dfs(nextWord, end, distance, parentToNextWord, tempResult, result);
+				}
+			}
+		}
+		tempResult.remove(tempResult.size() - 1);
+	}
 
-	private List<String> findNextWord(String crt, Set<String> dict) {
-		List<String> expansion = new ArrayList<String>();
-
-		for (int i = 0; i < crt.length(); i++) {
-			for (char ch = 'a'; ch <= 'z'; ch++) {
-				if (ch != crt.charAt(i)) {
-					String expanded = crt.substring(0, i) + ch
-							+ crt.substring(i + 1);
-					if (dict.contains(expanded)) {
-						expansion.add(expanded);
-					}
+	private List<String> findNextWords(String word, Set<String> dict) {
+		List<String> result = new ArrayList<>();
+		for (int i = 0; i < word.length(); i++) {
+			for (char j = 'a'; j <= 'z'; j++) {
+				char[] wordArray = word.toCharArray();
+				if (wordArray[i] == j) {
+					continue;
+				}
+				wordArray[i] = j;
+				String newWord = new String(wordArray);
+				if (dict.contains(newWord)) {
+					result.add(newWord);
 				}
 			}
 		}
 
-		return expansion;
+		return result;
 	}
 
 	public static void main(String[] args) {
