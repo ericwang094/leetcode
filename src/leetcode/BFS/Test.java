@@ -42,6 +42,17 @@ public class Test {
 		}
 	}
 
+	public ListNode reverseList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+
+		ListNode tail = reverseList(head.next);
+		head.next.next = head;
+		head.next = null;
+
+		return tail;
+	}
 	public static void main(String[] args) {
 		Test t = new Test();
 		int[] input = {1,4,6,8};
