@@ -31,6 +31,23 @@ public class ReverseLinkedList {
 		return reversedListHead;
 	}
 
+	public ListNode test(ListNode head) {
+
+		ListNode pre = null;
+		ListNode cur = head;
+		ListNode next = null;
+
+		while (cur != null) {
+			next = cur.next;
+			cur.next = pre;
+
+			pre = cur;
+			cur = next;
+		}
+
+		return pre;
+	}
+
 	public static void main(String[] args) {
 		ListNode node = new ListNode(1);
 		node.next = new ListNode(2);
