@@ -47,6 +47,59 @@ public class ReverseLinkedListII {
 		return dummy.next;
 	}
 
+	public ListNode reverseBetween1(ListNode head, int m, int n) {
+		ListNode prev = null;
+		ListNode current = head;
+		for (int i = 1; i < m; i++) {
+			prev = current;
+			current = current.next;
+
+		}
+
+		ListNode connectionNode = prev;
+		ListNode tail = current;
+
+		for (int i = 1; i <= n - m + 1; i++) {
+			ListNode next = current.next;
+			current.next = prev;
+
+			prev = current;
+			current = next;
+		}
+
+		if (connectionNode != null) {
+			connectionNode.next = prev;
+		} else {
+			head = prev;
+		}
+
+		tail.next = current;
+
+		return head;
+	}
+
+	public ListNode reverseBetween2(ListNode head, int m, int n) {
+		ListNode dummy = new ListNode(0);
+		dummy.next = head;
+
+		ListNode connectionNode = dummy;
+
+
+		for (int i = 1; i < m; i++) {
+			connectionNode = head;
+			head = head.next;
+		}
+
+		for (int i = 1; i <= n - m + 1; i++) {
+			ListNode next = head.next;
+			head.next = next.next;
+			next.next = connectionNode.next;
+			connectionNode.next = next;
+		}
+
+		return dummy.next;
+	}
+
 	public static void main(String[] args) {
 		ListNode node = new ListNode(1);
 		node.next = new ListNode(2);
@@ -55,6 +108,7 @@ public class ReverseLinkedListII {
 		node.next.next.next.next = new ListNode(5);
 
 		ReverseLinkedListII rll = new ReverseLinkedListII();
-		ListNode result = rll.reverseBetween(node, 2, 4);
+//		ListNode result = rll.reverseBetween(node, 2, 4);
+		ListNode result = rll.reverseBetween2(node, 2, 4);
 	}
 }
