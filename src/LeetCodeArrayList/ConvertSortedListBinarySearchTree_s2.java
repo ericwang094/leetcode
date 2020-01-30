@@ -26,7 +26,7 @@ public class ConvertSortedListBinarySearchTree_s2 {
 		int mid = start + (end - start) / 2;
 		TreeNode node = new TreeNode(list.get(mid));
 		node.left = helper(list, start, mid - 1);
-		node.right = helper(list, mid + 1, list.size() - 1);
+		node.right = helper(list, mid + 1, end);
 		return node;
 	}
 }
