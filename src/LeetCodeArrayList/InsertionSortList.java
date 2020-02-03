@@ -4,29 +4,26 @@ import TwoPointers.ListNode;
 
 public class InsertionSortList {
 	public ListNode insertionSortList(ListNode head) {
-		if( head == null ){
+		if (head == null) {
 			return head;
 		}
 
-		ListNode helper = new ListNode(0); //new starter of the sorted list
-		ListNode cur = head; //the node will be inserted
-		ListNode pre = helper; //insert node between pre and pre.next
-		ListNode next = null; //the next node will be inserted
-		//not the end of input list
-		while( cur != null ){
-			next = cur.next;
-			//find the right place to insert
-			while( pre.next != null && pre.next.val < cur.val ){
+		ListNode dummy = new ListNode(0);
+		ListNode pre = dummy;
+
+		while (head != null) {
+			pre = dummy;
+			while (pre.next != null && pre.next.val < head.val) {
 				pre = pre.next;
 			}
-			//insert between pre and pre.next
-			cur.next = pre.next;
-			pre.next = cur;
-			pre = helper;
-			cur = next;
+			ListNode next = head.next;
+			head.next = pre.next;
+			pre.next = head;
+
+			head = next;
 		}
 
-		return helper.next;
+		return dummy.next;
 	}
 
 	public static void main(String[] args) {
