@@ -60,6 +60,27 @@ public class Test {
 		return dummy.next;
 	}
 
+	public ListNode swapPairs(ListNode head) {
+		ListNode dummy = new ListNode(0);
+		dummy.next = head;
+
+		ListNode pre = dummy;
+
+		while (head != null && head.next != null) {
+			ListNode next = head.next;
+			ListNode nextTwo = next.next;
+
+			pre.next = next;
+			next.next = head;
+			head.next = nextTwo;
+
+			pre = head;
+			head = pre.next;
+		}
+
+		return dummy.next;
+	}
+
 	public static void main(String[] args) {
 		ListNode input1 = new ListNode(2);
 		input1.next = new ListNode(4);
