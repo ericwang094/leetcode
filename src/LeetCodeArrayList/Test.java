@@ -2,6 +2,10 @@ package LeetCodeArrayList;
 
 import TwoPointers.ListNode;
 
+import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
 public class Test {
 	public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 		ListNode result = new ListNode(0);
@@ -68,4 +72,85 @@ public class Test {
 		Test test = new Test();
 		test.addTwoNumbers(input1, input2);
 	}
+
+	public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+		ListNode dummy = new ListNode(0);
+		ListNode head = dummy;
+
+		while (l1 != null && l2 != null) {
+			int l1Val = l1.val;
+			int l2Val = l2.val;
+
+			if (l1Val < l2Val) {
+				head.next = new ListNode(l1Val);
+				l1 = l1.next;
+			} else {
+				head.next = new ListNode(l2Val);
+				l2 = l2.next;
+			}
+			head = head.next;
+		}
+
+		if (l1 != null) {
+			head.next = l1;
+		}
+
+		if (l2 != null) {
+			head.next = l2;
+		}
+
+		return dummy.next;
+	}
+
+	public ListNode mergeKLists(ListNode[] lists) {
+		if (lists == null || lists.length == 0) {
+			return null;
+		}
+		return mergeKListsHelper(lists, 0, lists.length - 1);
+	}
+
+	private ListNode mergeKListsHelper(ListNode[] lists, int min, int max) {
+		if (min == max) {
+			return lists[min];
+		}
+
+		int mid = min + (max - min) / 2;
+		ListNode list1 = mergeKListsHelper(lists, min, mid);
+		ListNode list2 = mergeKListsHelper(lists, mid + 1, max);
+
+		return mergeTwoLists(list1, list2);
+	}
+
+	public ListNode mergeKLists_s2(ListNode[] lists) {
+		if (lists == null || lists.length == 0) {
+			return null;
+		}
+		Queue<ListNode> priorityQueue = new PriorityQueue<>(comparator);
+		for (int i = 0; i < lists.length; i++ ) {
+			if (lists[i] != null) {
+				priorityQueue.add(lists[i]);
+			}
+		}
+
+		ListNode dummy = new ListNode(0);
+		ListNode head = dummy.next;
+
+		while (priorityQueue.size() != 0) {
+			head.next = priorityQueue.poll();
+			head = head.next;
+			if (head.next != null) {
+				priorityQueue.add(head.next);
+			}
+		}
+
+		return dummy.next;
+
+	}
+
+	private Comparator<ListNode> comparator = new Comparator<ListNode>(){
+		@Override
+		public int compare (ListNode l1, ListNode l2) {
+			return l1.val - l2.val;
+		}
+	};
 }
