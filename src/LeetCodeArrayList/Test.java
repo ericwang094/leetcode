@@ -81,18 +81,48 @@ public class Test {
 		return dummy.next;
 	}
 
-	public static void main(String[] args) {
-		ListNode input1 = new ListNode(2);
-		input1.next = new ListNode(4);
-		input1.next.next = new ListNode(3);
+	public ListNode rotateRight(ListNode head, int k) {
+		if (head == null || head.next == null || k == 0) {
+			return head;
+		}
 
-		ListNode input2 = new ListNode(5);
-		input2.next = new ListNode(6);
-		input2.next.next = new ListNode(4);
+		ListNode current = head;
 
-		Test test = new Test();
-		test.addTwoNumbers(input1, input2);
+		int length = 0;
+		while (current != null) {
+			current = current.next;
+			length++;
+		}
+
+		while (k >= length) {
+			k = k - length;
+		}
+
+		if (k == 0) {
+			return head;
+		}
+
+		ListNode lastEle = head;
+		ListNode fast = head;
+
+		while (k > 0) {
+			fast = fast.next;
+			k--;
+		}
+
+		while (fast.next != null) {
+			lastEle = lastEle.next;
+			fast = fast.next;
+		}
+
+		ListNode needToRotate = lastEle.next;
+		lastEle.next = null;
+		fast.next = head;
+
+		return needToRotate;
 	}
+
+
 
 	public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
 		ListNode dummy = new ListNode(0);
@@ -174,4 +204,52 @@ public class Test {
 			return l1.val - l2.val;
 		}
 	};
+
+	public ListNode deleteDuplicates(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+
+		ListNode dummy = new ListNode(0);
+		dummy.next = head;
+
+		ListNode slow = dummy;
+		ListNode fast = dummy.next;
+		while (fast != null) {
+			while (fast.val == fast.next.val) {
+				fast = fast.next;
+			}
+
+			if (slow.next == fast) {
+				slow = slow.next;
+			} else {
+				slow.next = fast.next;
+			}
+
+			fast = fast.next;
+		}
+
+		return dummy.next;
+	}
+
+	public static void main(String[] args) {
+//		ListNode input1 = new ListNode(2);
+//		input1.next = new ListNode(4);
+//		input1.next.next = new ListNode(3);
+//
+//		ListNode input2 = new ListNode(5);
+//		input2.next = new ListNode(6);
+//		input2.next.next = new ListNode(4);
+
+		ListNode input1 = new ListNode(1);
+		input1.next = new ListNode(2);
+		input1.next.next = new ListNode(3);
+		input1.next.next.next = new ListNode(3);
+		input1.next.next.next.next = new ListNode(4);
+		input1.next.next.next.next.next = new ListNode(4);
+		input1.next.next.next.next.next.next = new ListNode(5);
+
+		Test test = new Test();
+		test.deleteDuplicates(input1);
+	}
 }

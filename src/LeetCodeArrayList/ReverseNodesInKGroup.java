@@ -14,12 +14,15 @@ public class ReverseNodesInKGroup {
 		dummy.next = head;
 
 		ListNode start = dummy;
+
 		int i = 0;
+
 		while (head != null) {
 			i++;
 			if (i == k) {
 				start = reverseListNode(start, head.next);
 				head = start.next;
+				i = 0;
 			} else {
 				head = head.next;
 			}
@@ -28,23 +31,23 @@ public class ReverseNodesInKGroup {
 		return dummy.next;
 	}
 
-	private ListNode reverseListNode(ListNode head, ListNode end) {
-		ListNode curr = head.next;
-		ListNode firstNode = curr;
-		ListNode pre = head;
+	private ListNode reverseListNode(ListNode start, ListNode end) {
+		ListNode current = start.next;
+		ListNode pre = start;
+		ListNode first = current;
 
-		while (curr != end) {
-			ListNode next = curr.next;
-			curr.next = pre;
+		while (current != end) {
+			ListNode next = current.next;
+			current.next = pre;
 
-			pre = curr;
-			curr = next;
+			pre = current;
+			current = next;
 		}
 
-		head.next = pre;
-		firstNode.next = curr;
+		start.next = pre;
+		first.next = current;
 
-		return firstNode;
+		return first;
 	}
 
 	public static void main(String[] args) {
