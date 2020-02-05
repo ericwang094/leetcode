@@ -3,37 +3,48 @@ package LeetCodeArrayList;
 import TwoPointers.ListNode;
 
 public class ReverseNodesInKGroup {
-	ListNode pre = null;
-	ListNode current = null;
-	ListNode tail = null;
+
 
 	public ListNode reverseKGroup(ListNode head, int k) {
+		if (head == null || head.next == null || k == 1) {
+			return head;
+		}
+
 		ListNode dummy = new ListNode(0);
 		dummy.next = head;
 
-		current = head;
-		tail = head;
-
-		pre = dummy;
-
-		while (current != null) {
-			reverseListNode(k);
-			tail.next = pre;
-			tail = current;
+		ListNode start = dummy;
+		int i = 0;
+		while (head != null) {
+			i++;
+			if (i == k) {
+				start = reverseListNode(start, head.next);
+				head = start.next;
+			} else {
+				head = head.next;
+			}
 		}
+
 		return dummy.next;
 	}
 
-	private void reverseListNode(int k) {
-		while (current != null && k > 0) {
-			ListNode next = current.next;
-			current.next = pre;
+	private ListNode reverseListNode(ListNode head, ListNode end) {
+		ListNode curr = head.next;
+		ListNode firstNode = curr;
+		ListNode pre = head;
 
-			pre = current;
-			current = next;
+		while (curr != end) {
+			ListNode next = curr.next;
+			curr.next = pre;
 
-			k--;
+			pre = curr;
+			curr = next;
 		}
+
+		head.next = pre;
+		firstNode.next = curr;
+
+		return firstNode;
 	}
 
 	public static void main(String[] args) {
