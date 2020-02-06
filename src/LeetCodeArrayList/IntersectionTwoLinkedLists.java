@@ -33,7 +33,7 @@ public class IntersectionTwoLinkedLists {
 		ListNode tempB = headB;
 
 		while (tempA != tempB) {
-			tempA = tempA == null?headB: tempA.next;
+			tempA = tempA == null ? headB: tempA.next;
 			tempB = tempB == null ? headA : tempB.next;
 		}
 
