@@ -278,6 +278,63 @@ public class Test {
 		return dummy.next;
 	}
 
+	public void reorderList(ListNode head) {
+		if (head == null || head.next == null) {
+			return;
+		}
+		ListNode midNode = findMid(head);
+		ListNode reversedTail = reverseListNode(midNode);
+
+		ListNode dummy = new ListNode(0);
+		dummy.next = head;
+
+		ListNode next = null;
+		ListNode reversedTailNext = null;
+		while (head.next != null) {
+			next = head.next;
+			reversedTailNext = reversedTail.next;
+
+			head.next = reversedTail;
+			reversedTail.next = next;
+
+			head = next;
+			reversedTail = reversedTailNext;
+		}
+
+		if (reversedTail != null) {
+			head.next = reversedTail;
+		}
+	}
+
+	private ListNode reverseListNode(ListNode node) {
+		ListNode prev = null;
+
+		while (node != null) {
+			ListNode next = node.next;
+			node.next = prev;
+
+			prev = node;
+			node = next;
+		}
+
+		return prev;
+	}
+
+	private ListNode findMid(ListNode node) {
+		ListNode fast = node;
+		ListNode slow = node;
+		ListNode prev = node;
+
+		while (fast != null && fast.next != null) {
+			prev = slow;
+			fast = fast.next.next;
+			slow = slow.next;
+		}
+
+		prev.next = null;
+		return slow;
+	}
+
 	public static void main(String[] args) {
 //		ListNode input1 = new ListNode(2);
 //		input1.next = new ListNode(4);
@@ -300,5 +357,9 @@ public class Test {
 
 		Test test = new Test();
 		test.reverseBetween(input1,1 ,2);
+		input1.next.next.next = new ListNode(4);
+		input1.next.next.next.next = new ListNode(5);
+		
+		test.reorderList(input1);
 	}
 }
