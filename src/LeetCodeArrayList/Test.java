@@ -232,6 +232,52 @@ public class Test {
 		return dummy.next;
 	}
 
+	public ListNode reverseList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+
+		ListNode reversedNode = reverseList(head.next);
+		head.next.next = head;
+		head.next = null;
+
+		return reversedNode;
+	}
+
+	public ListNode reverseBetween(ListNode head, int m, int n) {
+		ListNode dummy = new ListNode(0);
+		dummy.next = head;
+
+		ListNode connection = dummy;
+		ListNode tail = head;
+
+		for (int i = 0; i < n; i++) {
+			if (i == m - 1) {
+				connection = head;
+				tail = head.next;
+			}
+
+			head = head.next;
+		}
+
+		ListNode pre = null;
+		ListNode current = connection.next;
+
+		while (current != head.next) {
+			ListNode next = current.next;
+			current.next = pre;
+
+			pre = current;
+			current = next;
+		}
+
+		tail.next = current;
+
+		connection.next = pre;
+
+		return dummy.next;
+	}
+
 	public static void main(String[] args) {
 //		ListNode input1 = new ListNode(2);
 //		input1.next = new ListNode(4);
@@ -241,15 +287,18 @@ public class Test {
 //		input2.next = new ListNode(6);
 //		input2.next.next = new ListNode(4);
 
+//		ListNode input1 = new ListNode(1);
+//		input1.next = new ListNode(2);
+//		input1.next.next = new ListNode(3);
+//		input1.next.next.next = new ListNode(4);
+//		input1.next.next.next.next = new ListNode(5);
+
 		ListNode input1 = new ListNode(1);
 		input1.next = new ListNode(2);
 		input1.next.next = new ListNode(3);
-		input1.next.next.next = new ListNode(3);
-		input1.next.next.next.next = new ListNode(4);
-		input1.next.next.next.next.next = new ListNode(4);
-		input1.next.next.next.next.next.next = new ListNode(5);
+
 
 		Test test = new Test();
-		test.deleteDuplicates(input1);
+		test.reverseBetween(input1,1 ,2);
 	}
 }
