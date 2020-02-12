@@ -52,6 +52,26 @@ public class PopulatingNextRightPointersEachNode_116 {
 		return result;
 	}
 
+	public Node connect_3(Node root) {
+		Node result = root;
+
+		if (root == null) {
+			return root;
+		}
+
+		if (root.left != null) {
+			root.left.next = root.right;
+			if (root.next != null) {
+				root.right.next = root.next.left;
+			}
+		}
+
+		connect_3(root.left);
+		connect_3(root.right);
+
+		return result;
+	}
+
 	// Definition for a Node.
 	static class Node {
 	    public int val;
