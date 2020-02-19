@@ -1,7 +1,6 @@
 package HashMap;
 
 public class FirstUniqueNumberInDataStream {
-
     /**
      * @param nums: a continuous stream of numbers
      * @param number: a number
