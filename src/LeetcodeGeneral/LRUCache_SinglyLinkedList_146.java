@@ -52,7 +52,6 @@ public class LRUCache_SinglyLinkedList_146 {
 			currentNode.next = tail;
 			mapKToPrev.put(tail.key, currentNode);
 
-			System.out.println(currentNode.val);
 			return currentNode.val;
 		}
 
