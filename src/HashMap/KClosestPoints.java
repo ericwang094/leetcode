@@ -2,6 +2,7 @@ package HashMap;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class KClosestPoints {
     /**
@@ -10,40 +11,42 @@ public class KClosestPoints {
      * @param k: An integer
      * @return: the k closest points
      */
+    private Point globalOrigin;
     public Point[] kClosest(Point[] points, Point origin, int k) {
-        // write your code here
-        PriorityQueue<Point> pq = new PriorityQueue<Point>(k, new Comparator<Point>() {
+        globalOrigin = origin;
+        Queue<Point> priorityQueue = new PriorityQueue<>(new Comparator<Point>() {
             @Override
-            public int compare(Point o1, Point o2) {
-                int diff = getDistance(o2, origin) - getDistance(o1, origin);
+            public int compare(Point p1, Point p2) {
+                int diff = getDistance(p2, globalOrigin) - getDistance(p1, globalOrigin);
                 if (diff == 0) {
-                    diff = o2.x - o1.x;
+                    diff = p2.x - p1.x;
                 }
                 if (diff == 0) {
-                    diff = o2.y - o2.x;
+                    diff = p2.y - p1.y;
                 }
+
                 return diff;
             }
         });
 
         for (int i = 0; i < points.length; i++) {
-            pq.offer(points[i]);
-            if (pq.size() > k) {
-                pq.poll();
+            priorityQueue.add(points[i]);
+            if (priorityQueue.size() > k) {
+                priorityQueue.poll();
             }
         }
 
-        k = pq.size();
+        int index = k-1;
         Point[] result = new Point[k];
-        while (!pq.isEmpty()) {
-            k--;
-            result[k] = pq.poll();
-
+        while (!priorityQueue.isEmpty()) {
+            result[index] = priorityQueue.poll();
+            index--;
         }
+
         return result;
     }
 
     private int getDistance(Point a, Point b) {
-        return (int) (Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+        return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
     }
 }
