@@ -49,4 +49,16 @@ public class KClosestPoints {
     private int getDistance(Point a, Point b) {
         return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
     }
+
+    public static void main(String[] args) {
+        KClosestPoints test = new KClosestPoints();
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        pq.add(5);
+        pq.add(1);
+        pq.add(3);
+        pq.add(2);
+
+        pq.poll();
+
+    }
 }

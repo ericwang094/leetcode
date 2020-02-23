@@ -72,9 +72,89 @@ public class Test {
 		}
 	}
 
+	public int kthLargestElement(int n, int[] nums) {
+		return quickMedian(nums, 0, nums.length - 1, n);
+	}
+
+	public int median(int[] nums) {
+		return quickMedian(nums, 0, nums.length - 1, (nums.length + 1)/2);
+	}
+
+	private int quickMedian(int[] nums, int start, int end, int size) {
+		int pivotIndex = partition(nums, start, end);
+		if (pivotIndex == size - 1 ) {
+			return nums[pivotIndex];
+		}
+		if (pivotIndex > size - 1) {
+			return quickMedian(nums, start, pivotIndex - 1, size);
+		} else {
+			return quickMedian(nums, pivotIndex + 1, end, size);
+		}
+	}
+
+	private int partition(int[] nums, int start, int end) {
+		int pivot = nums[end];
+		int i = start - 1;
+		for (int j = start; j < end; j++) {
+			if (nums[j] > pivot) {
+				continue;
+			}
+			i++;
+			swap(nums, i, j);
+		}
+
+		i++;
+		swap(nums, i, end);
+		return i;
+	}
+
+	private void swap(int[] nums, int index1, int index2) {
+		if (index1 == index2) {
+			return;
+		}
+
+		int temp = nums[index1];
+		nums[index1] = nums[index2];
+		nums[index2] = temp;
+	}
+
+	public int kthSmallest(int k, int[] nums) {
+		return quickSelect(nums, 0, nums.length - 1, k - 1);
+	}
+
+	public int quickSelect(int[] A, int start, int end, int k) {
+		if (start >= end) {
+			return A[start];
+		}
+
+		int left = start;
+		int right = end;
+		int pivot = A[(start + end) / 2];
+
+		while (left <= right) {
+			while (left <= right && A[left] < pivot) {
+				left++;
+			}
+			while (left <= right && A[right] > pivot) {
+				right++;
+			}
+
+			if (left <= right) {
+				swap(A, left, right);
+			}
+		}
+
+		if (right >= k && start >= right) {
+			return quickSelect(A, start, right, k);
+		} else if (left <= k && left <= end) {
+			return quickSelect(A, left, end, k);
+		} else {
+			return A[k];
+		}
+	}
 	public static void main(String[] args) {
 		Test test = new Test();
-		int[] nums = {1, 2, 2, 1, 3, 4};
-		test.firstUniqueNumber(nums, 3);
+		int[] nums = {1,3,4,2};
+		System.out.println(test.kthLargestElement(1, nums));
 	}
 }
