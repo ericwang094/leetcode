@@ -36,7 +36,7 @@ public class KthSmallest {
 
 
 //    public int kthSmallest2(TreeNode root, int k) {
-//        Stack<TreeNode> stack = new Stack<>();
+//        MyStack<TreeNode> stack = new MyStack<>();
 //        stack.add(root);
 //        for (int i = 0; i < k; i++) {
 //            TreeNode node = stack.pop();

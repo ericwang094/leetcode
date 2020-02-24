@@ -3,7 +3,7 @@ package HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Stack {
+public class MyStack {
 	private Queue<Integer> q1 = new LinkedList<>();
 	private Queue<Integer> q2 = new LinkedList<>();
 	private Queue<Integer> currentQueue = q1;
@@ -68,7 +68,7 @@ public class Stack {
 	}
 
 	public static void main(String[] args) {
-		Stack stack = new Stack();
+		MyStack stack = new MyStack();
 		stack.push(1);
 //		stack.pop();
 		stack.push(2);
