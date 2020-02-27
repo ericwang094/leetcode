@@ -15,7 +15,6 @@ public class MergeKSortedArray {
 		if (start >= end) {
 			return arrays[start];
 		}
-
 		int mid = (start + end) / 2;
 		int[] leftPart = helper(arrays, start, mid);
 		int[] rightPart = helper(arrays, mid + 1, end);
