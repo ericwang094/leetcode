@@ -13,6 +13,7 @@ public class MergeKSortedArray {
 
 	private int[] helper(int[][] arrays, int start, int end) {
 		if (start >= end) {
+
 			return arrays[start];
 		}
 		int mid = (start + end) / 2;
