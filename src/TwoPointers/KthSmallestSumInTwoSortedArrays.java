@@ -21,27 +21,30 @@ public class KthSmallestSumInTwoSortedArrays {
 		int[] directionsX = {0, 1};
 		int[] directionsY = {1, 0};
 
-		Set<Integer> set = new HashSet<>();
+//		Set<Integer> set = new HashSet<>();
 
 		pq.add(new Pair(0, 0, A[0] + B[0]));
 
-		int result = 0;
-		for (int i = 0; i < k; i++) {
+		boolean[][] visited = new boolean[A.length][B.length];
+
+		for (int i = 0; i < k - 1; i++) {
 			Pair curr = pq.poll();
-			result = curr.sum;
+
 			for (int j = 0; j < 2; j++) {
 				int nextX = curr.x + directionsX[j];
 				int nextY = curr.y + directionsY[j];
-				if (nextX < A.length && nextY < B.length) {
+				if (nextX < A.length && nextY < B.length && !visited[nextX][nextY]) {
 					int sum = A[nextX] + B[nextY];
-					if (set.contains(sum)) {
-						continue;
-					}
+//					if (set.contains(sum)) {
+//						continue;
+//					}
+					visited[nextX][nextY] = true;
+//					set.add(sum);
 					pq.add(new Pair(nextX, nextY, sum));
 				}
 			}
 		}
-		return result;
+		return pq.peek().sum;
 	}
 
 	private class Pair {
@@ -53,5 +56,12 @@ public class KthSmallestSumInTwoSortedArrays {
 			this.y = y;
 			this.sum = sum;
 		}
+	}
+
+	public static void main(String[] args) {
+		KthSmallestSumInTwoSortedArrays test = new KthSmallestSumInTwoSortedArrays();
+		int[] input1 = {1, 7, 11};
+		int[] input2 = {2, 4, 6};
+		test.kthSmallestSum(input1, input2, 8);
 	}
 }
