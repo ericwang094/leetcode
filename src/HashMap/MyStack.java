@@ -3,7 +3,7 @@ package HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Stack {
+public class MyStack {
 	private Queue<Integer> q1 = new LinkedList<>();
 	private Queue<Integer> q2 = new LinkedList<>();
 	private Queue<Integer> currentQueue = q1;
@@ -22,11 +22,11 @@ public class Stack {
 	public void pop() {
 		// write your code here
 		Queue<Integer> toQueue = currentQueue == q1 ? q2 : q1;
-		currentQueue.poll();
-		for (int i = 0; i < currentQueue.size(); i++) {
+
+		while (currentQueue.size() != 1) {
 			toQueue.add(currentQueue.poll());
 		}
-
+		currentQueue.poll();
 		swapCurrentQueue();
 	}
 
@@ -36,13 +36,12 @@ public class Stack {
 	public int top() {
 		// write your code here
 		Queue<Integer> toQueue = currentQueue == q1 ? q2 : q1;
-		int val = currentQueue.poll();
-		toQueue.add(val);
-		for (int i = 0; i < currentQueue.size(); i++) {
+
+		while (currentQueue.size() != 1) {
 			toQueue.add(currentQueue.poll());
 		}
-
-
+		int val = currentQueue.poll();
+		toQueue.add(val);
 		swapCurrentQueue();
 		return val;
 	}
@@ -52,11 +51,11 @@ public class Stack {
 	 */
 	public boolean isEmpty() {
 		// write your code here
-		if (currentQueue.isEmpty()) {
-			System.out.println("true");
-		} else {
-			System.out.println("false");
-		}
+//		if (currentQueue.isEmpty()) {
+//			System.out.println("true");
+//		} else {
+//			System.out.println("false");
+//		}
 		return currentQueue.isEmpty();
 	}
 
@@ -69,13 +68,19 @@ public class Stack {
 	}
 
 	public static void main(String[] args) {
-		Stack stack = new Stack();
+		MyStack stack = new MyStack();
 		stack.push(1);
 //		stack.pop();
 		stack.push(2);
-//		stack.isEmpty();
-		stack.pop();
+//		stack.push(3);
+		stack.isEmpty();
 		stack.top();
+		stack.pop();
+//		stack.top();
+//		stack.pop();
+//		stack.top();
+		stack.isEmpty();
+//		stack.pop();
 //		stack.isEmpty();
 	}
 }

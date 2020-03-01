@@ -11,20 +11,21 @@ public class KClosestPoints {
      * @param k: An integer
      * @return: the k closest points
      */
-    private Point globalOrigin;
+    private Point globalOriginal;
     public Point[] kClosest(Point[] points, Point origin, int k) {
-        globalOrigin = origin;
+        this.globalOriginal = origin;
+
         Queue<Point> priorityQueue = new PriorityQueue<>(new Comparator<Point>() {
             @Override
             public int compare(Point p1, Point p2) {
-                int diff = getDistance(p2, globalOrigin) - getDistance(p1, globalOrigin);
+                int diff = getDistance(p2, globalOriginal) - getDistance(p1, globalOriginal);
                 if (diff == 0) {
                     diff = p2.x - p1.x;
                 }
+
                 if (diff == 0) {
                     diff = p2.y - p1.y;
                 }
-
                 return diff;
             }
         });
@@ -36,18 +37,28 @@ public class KClosestPoints {
             }
         }
 
-        int index = k-1;
         Point[] result = new Point[k];
-        while (!priorityQueue.isEmpty()) {
-            result[index] = priorityQueue.poll();
-            index--;
+        k--;
+        while (k >= 0) {
+            result[k] = priorityQueue.poll();
+            k--;
         }
 
         return result;
     }
 
-    private int getDistance(Point a, Point b) {
-        return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
+    private int getDistance(Point p1, Point p2) {
+        return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
+    }
+
+    private class Point {
+        int x;
+        int y;
+
+        Point(int a, int b) {
+            x = a;
+            y = b;
+        }
     }
 
     public static void main(String[] args) {

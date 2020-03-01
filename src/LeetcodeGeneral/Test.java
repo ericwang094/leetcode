@@ -152,6 +152,52 @@ public class Test {
 			return A[k];
 		}
 	}
+
+	public int[] topk(int[] nums, int k) {
+		topKHelper(nums, k, 0, nums.length - 1);
+		int[] result = new int[k];
+		for (int i = 0; i < k; i++) {
+			result[i] = nums[i];
+		}
+
+		return result;
+	}
+
+	private void topKHelper(int[] nums, int k, int begin, int end) {
+		if (begin >= k) {
+			return;
+		}
+
+		if (begin >= end) {
+			return;
+		}
+
+		int left = begin, right = end;
+		int pivot = nums[(left + right) / 2];
+
+		while (left <= right) {
+			while (left <= right && nums[left] > pivot) {
+				left++;
+			}
+
+			while (left <= right && nums[right] < pivot) {
+				right--;
+			}
+
+			if (left <= right) {
+				int temp = nums[left];
+				nums[left] = nums[right];
+				nums[right] = temp;
+
+				left++;
+				right--;
+			}
+		}
+
+		topKHelper(nums, k, begin, right);
+		topKHelper(nums, k, left, end);
+	}
+
 	public static void main(String[] args) {
 		Test test = new Test();
 		int[] nums = {1,3,4,2};
