@@ -13,61 +13,38 @@ public class MissingRanges {
 	public List<String> findMissingRanges(int[] nums, int lower, int upper) {
 		List<String> result = new ArrayList<>();
 		if (nums.length == 0) {
-			if (upper - lower == 0) {
-				result.add(String.valueOf(upper));
-			} else if(upper- lower == 2) {
-				result.add(String.valueOf(lower + 1));
-			} else {
-				String sb = String.valueOf(lower) +
-						"->" +
-						String.valueOf(upper);
-				result.add(sb);
-
-			}
+			result.add(convertRangeToString(lower, upper));
 			return result;
 		}
 
-		Long firstRange = Long.valueOf(nums[0] - lower);
-		if (firstRange == 1) {
-			result.add(String.valueOf(lower));
-		} else if (firstRange != 0) {
-			String sb = String.valueOf((long) lower) +
-					"->" +
-					String.valueOf((long) nums[0] - 1);
-			result.add(sb);
+		String pre = convertRangeToString(lower, (long)nums[0] - 1);
+		if (pre != null) {
+			result.add(pre);
 		}
 
-		for (int left = 0; left < nums.length - 1; left++) {
-			if ((long) nums[left + 1] - (long) nums[left] == 1) {
-				continue;
-			}
-
-			if ((long) nums[left + 1] - (long) nums[left] == 2) {
-				result.add(String.valueOf((long) nums[left] + 1));
-			} else {
-				String sb = String.valueOf((long) nums[left] + 1) +
-						"->" +
-						String.valueOf((long) nums[left + 1] - 1);
-				result.add(sb);
-			}
-
-		}
-
-		if ((long) upper - (long) nums[nums.length - 1] != 0) {
-			if ((long) upper - (long) nums[nums.length - 1] == 1) {
-				result.add(String.valueOf(upper));
-			}
-			else if ((long) upper - (long) nums[nums.length - 1] == 2) {
-				result.add(String.valueOf(upper - 1));
-			} else {
-				String sb = String.valueOf((long) nums[nums.length - 1] + 1) +
-						"->" +
-						String.valueOf((long) upper);
-				result.add(sb);
+		for (int i = 0; i < nums.length - 1; i++) {
+			String str = convertRangeToString((long)nums[i] + 1, (long)nums[i + 1] - 1);
+			if (str != null) {
+				result.add(str);
 			}
 		}
 
+		String str = convertRangeToString((long) nums[nums.length - 1] + 1, upper);
+		if (str != null) {
+			result.add(str);
+		}
 		return result;
+	}
+
+	private String convertRangeToString(long lower, long upper) {
+		if (lower > upper) {
+			return null;
+		}
+		if (upper - lower == 0) {
+			return String.valueOf(lower);
+		} else {
+			return String.valueOf(lower) + "->" + String.valueOf(upper);
+		}
 	}
 
 	public static void main(String[] args) {
