@@ -14,15 +14,15 @@ public class ConnectingGraph {
 	}
 
 	private int find(int node) {
-	 	int father = this.graph[node];
-	 	while (father != this.graph[father]) {
+	 	int father = graph[node];
+		while (father != graph[father]) {
 	 		father = graph[father];
 	    }
 
 	    int temp = 0;
 		while (node != father) {
 	 		temp = graph[node];
-	 		graph[temp] = father;
+	 		graph[node] = father;
 	 		node = temp;
 		}
 
