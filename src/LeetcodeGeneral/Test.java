@@ -198,6 +198,30 @@ public class Test {
 		topKHelper(nums, k, left, end);
 	}
 
+	public ListNode detectCycle(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+
+		ListNode fast = head;
+		ListNode slow = head;
+
+		while (fast != null && fast.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+
+			if (slow == fast) {
+				ListNode resetHead = head;
+				while (slow != resetHead) {
+					slow = slow.next;
+					resetHead = resetHead.next;
+				}
+				return resetHead;
+			}
+		}
+		return null;
+	}
+
 	public static void main(String[] args) {
 		Test test = new Test();
 		int[] nums = {1,3,4,2};
