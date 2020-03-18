@@ -12,30 +12,43 @@ public class Woodcut {
 		if (L == null || L.length == 0) {
 			return 0;
 		}
-
-		int max = 0;
-		for (int i : L) {
-			max = Math.max(i, max);
+		int left = 0;
+		int right = 0;
+		for (int i = 0; i < L.length; i++) {
+			right = Math.max(right, L[i]);
 		}
 
-		int start = 0;
-		int end = max;
-
-		int result = 0;
-		while (start + 1 < end) {
-			int mid = start + (end - start) / 2;
-			int pieces = 0;
-			for (int i = 0; i < L.length; i++) {
-				pieces += L[i] / mid;
-			}
-			if (pieces >= k) {
-				result = mid;
-				start = mid;
+		while (left + 1 < right) {
+			int mid = left + (right - left) / 2;
+			int cut = cut(L, mid);
+			if (cut >= k) {
+				left = mid;
 			} else {
-				end = mid;
+				right = mid;
 			}
 		}
 
-		return result;
+		if (cut(L, right) >= k) {
+			return right;
+		}
+
+		if (cut(L, left) >= k) {
+			return left;
+		}
+
+		return left;
 	}
+
+	private int cut(int[] L, int k) {
+		if (k == 0) {
+			return 0;
+		}
+		int num = 0;
+		for (int i = 0; i < L.length; i++) {
+			num += L[i] / k;
+		}
+
+		return num;
+	}
+
 }
