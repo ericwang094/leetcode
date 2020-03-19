@@ -28,14 +28,13 @@ public class Woodcut {
 			}
 		}
 
-		if (cut(L, right) >= k) {
-			return right;
-		}
-
 		if (cut(L, left) >= k) {
 			return left;
 		}
 
+		if (cut(L, right) >= k) {
+			return right;
+		}
 		return left;
 	}
 

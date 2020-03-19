@@ -27,9 +27,13 @@ public class CopyBook {
 			}
 		}
 
-		if (countPeople(pages, start) > k) {
+		if (countPeople(pages, start) <= k) {
+			return start;
+		}
+		if (countPeople(pages, end) <= k) {
 			return end;
 		}
+
 		return start;
 	}
 
