@@ -1,7 +1,7 @@
 package leetcode.BFS;
 
 import java.util.*;
-
+// 2020-5-22 比较好的答案 https://www.jiuzhang.com/solution/sequence-reconstruction/#tag-other
 public class LintCodeSequenceReconstruction {
     /**
      * @param org: a permutation of the integers from 1 to n

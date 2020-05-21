@@ -1,5 +1,8 @@
 package LintCodeIntroduction;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LongestPalindromicSubstring {
 	/**
 	 * @param s: input string

@@ -53,11 +53,72 @@ public class Test {
 
 		return tail;
 	}
+
+	public boolean sequenceReconstruction(int[] org, int[][] seqs) {
+		// write your code here
+		Map<Integer, Integer> indegree = new HashMap<>();
+		Map<Integer, Set<Integer>> edge = new HashMap<>();
+
+		for (int[] seq : seqs) {
+			if (seq.length > 0) {
+				indegree.putIfAbsent(seq[0], 0);
+			}
+
+			for (int i = 0; i < seq.length - 1; i++) {
+				int existingDegree = indegree.getOrDefault(seq[i+1], 0);
+				existingDegree++;
+				indegree.put(seq[i + 1], existingDegree);
+
+				Set<Integer> existingEdge = edge.getOrDefault(seq[i], new HashSet<Integer>());
+				existingEdge.add(seq[i+1]);
+				edge.put(seq[i], existingEdge);
+			}
+		}
+
+		if (indegree.size() != org.length) {
+			return false;
+		}
+
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < org.length; i++) {
+			if (indegree.get(org[i]) == 0) {
+				queue.add(org[i]);
+			}
+		}
+
+		if (queue.size() > 1) {
+			return false;
+		}
+
+		int index = 0;
+		while (!queue.isEmpty()) {
+			int currentNum = queue.poll();
+			if (currentNum != org[index]) {
+				return false;
+			}
+			index++;
+			Set<Integer> currentEdgeSet = edge.getOrDefault(currentNum, new HashSet<>());
+			for (int currentEdge : currentEdgeSet) {
+				int currentEdgeDegree = indegree.get(currentEdge);
+				currentEdgeDegree--;
+				if (currentEdgeDegree == 0) {
+					queue.add(currentEdge);
+				}
+				indegree.put(currentEdge, indegree.get(currentEdge) - 1);
+			}
+		}
+		return true;
+	}
+
 	public static void main(String[] args) {
 		Test t = new Test();
-		int[] input = {1,4,6,8};
-
-
+		int[] input1 = {1,2,3};
+		int[][] input2 = {
+				{1,2},
+				{1,3},
+				{2,3}
+		};
+		t.sequenceReconstruction(input1, input2);
 	}
 }
 
