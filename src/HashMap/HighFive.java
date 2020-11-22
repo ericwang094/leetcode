@@ -1,6 +1,7 @@
 package HashMap;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -17,7 +18,7 @@ public class HighFive {
 			if (!map.containsKey(currentRecord.id)) {
 				map.put(currentRecord.id, new PriorityQueue<>());
 			}
-			PriorityQueue currentQueue = map.get(currentRecord.id);
+			PriorityQueue<Integer> currentQueue = map.get(currentRecord.id);
 			currentQueue.add(currentRecord.score);
 			if (currentQueue.size() > 5) {
 				currentQueue.poll();

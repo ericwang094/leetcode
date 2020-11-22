@@ -63,5 +63,12 @@ public class BinaryTreePostorderTraversal {
 		return result;
 	}
 
+	public static void main(String[] args) {
+		BinaryTreePostorderTraversal btpt = new BinaryTreePostorderTraversal();
+		TreeNode input = new TreeNode(1);
+		input.left = new TreeNode(2);
+		input.right = new TreeNode(3);
 
+//		btpt.postorderTraversal2(input);
+	}
 }

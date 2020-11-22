@@ -72,41 +72,42 @@ public class LintNumberOfIslands {
 	 * @return: an integer
 	 */
 	public int numIslands(boolean[][] grid) {
+		// write your code here
 		if (grid == null || grid.length == 0 || grid[0].length == 0) {
 			return 0;
 		}
-		// write your code here
-		int result = 0;
+
+		int numOfIsland = 0;
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
 				if (grid[i][j]) {
-					result += 1;
-					bfs(i, j, grid);
+					numOfIsland++;
+					grid[i][j] = false;
+					bfs(grid, new Point(i, j));
 				}
 			}
 		}
-		return result;
+		return numOfIsland;
 	}
 
-	private void bfs (int i, int j, boolean[][] grid) {
-		Queue<Position> queue = new LinkedList<>();
-		queue.offer(new Position(i, j));
+	private void bfs(boolean[][] grid, Point point) {
+		Queue<Point> queue = new LinkedList<>();
+		queue.add(point);
 
 		while (!queue.isEmpty()) {
-			Position currentPosition = queue.poll();
-			List<Position> neighborList = neighbors(currentPosition.x, currentPosition.y, grid);
-			for (Position p : neighborList) {
-				if (!grid[p.x][p.y]) {
-					continue;
+			Point currentPoint = queue.poll();
+			List<Point> neighbors = getNeighbors(point.x, point.y, grid);
+			for (Point neighbor : neighbors) {
+				if (grid[neighbor.x][neighbor.y]) {
+					grid[neighbor.x][neighbor.y] = false;
+					queue.add(neighbor);
 				}
-				grid[p.x][p.y] = false;
-				queue.offer(p);
 			}
 		}
 	}
 
-	private List<Position> neighbors(int x, int y, boolean[][] grid) {
-		List<Position> neighbors = new ArrayList<>();
+	private List<Point> getNeighbors(int x, int y, boolean[][] grid) {
+		List<Point> neighbors = new ArrayList<>();
 		int[] directionX = {-1, 0, 1, 0};
 		int[] directionY = {0, -1, 0, 1};
 		for (int i = 0; i < directionX.length; i++) {
@@ -117,7 +118,7 @@ public class LintNumberOfIslands {
 				continue;
 			}
 
-			neighbors.add(new Position(newX, newY));
+			neighbors.add(new Point(newX, newY));
 		}
 
 		return neighbors;
@@ -135,8 +136,8 @@ public class LintNumberOfIslands {
 		return true;
 	}
 
-	class Position {
-		public Position(int x, int y) {
+	class Point {
+		public Point(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}

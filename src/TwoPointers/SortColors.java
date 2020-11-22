@@ -48,6 +48,25 @@ public class SortColors {
         }
     }
 
+    public void sortColors3(int[] nums) {
+        // write your code here
+        int i = 0;
+        int j = 0;
+        int k = nums.length - 1;
+        while (j < k) {
+            if (nums[j] == 0) {
+                swap(nums, i, j);
+                i++;
+                j++;
+            } else if (nums[j] == 2) {
+                swap(nums,j,k);
+                k--;
+            } else {
+                j++;
+            }
+        }
+    }
+
     public void swap (int[] A, int l, int r) {
         int temp = A[l];
         A[l] = A[r];
@@ -56,7 +75,8 @@ public class SortColors {
 
     public static void main(String[] args) {
         SortColors sc = new SortColors();
-        int[] input = {1, 0, 2, 1, 1, 0, 0, 2};
-        sc.sortColors(input);
+//        int[] input = {1, 0, 2, 1, 1, 0, 0, 2};
+        int[] input = {0,2,2,2,2,1,0,1,0,0,0,1,0,2,0};
+        sc.sortColors3(input);
     }
 }

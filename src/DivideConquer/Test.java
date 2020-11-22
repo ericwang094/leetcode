@@ -845,13 +845,195 @@ public class Test {
 		return result;
 	}
 
+	public List<Integer> closestKValues2(TreeNode root, double target, int k) {
+		// write your code here
+		Stack<TreeNode> nextStack = new Stack<>();
+		Stack<TreeNode> prevStack = new Stack<>();
+
+		TreeNode temp = root;
+		while (temp != null) {
+			nextStack.add(temp);
+			temp = temp.left;
+		}
+
+		temp = root;
+		while (temp != null) {
+			prevStack.add(temp);
+			temp = temp.right;
+		}
+
+		while (!nextStack.isEmpty() && nextStack.peek().val < target) {
+			moveNextNode(nextStack);
+		}
+
+		while (!prevStack.isEmpty() && prevStack.peek().val >= target) {
+			movePrevNode(prevStack);
+		}
+
+		List<Integer> result = new ArrayList<>();
+		for (int i = 0; i < k; i++) {
+			if (!nextStack.isEmpty() && !prevStack.isEmpty()) {
+				TreeNode nextNode = nextStack.peek();
+				TreeNode prevNode = prevStack.peek();
+				if (Math.abs(target - nextNode.val) < Math.abs(target-prevNode.val)) {
+					result.add(nextNode.val);
+					moveNextNode(nextStack);
+				} else {
+					result.add(prevNode.val);
+					movePrevNode(prevStack);
+				}
+			} else if (!nextStack.isEmpty()) {
+				result.add(nextStack.peek().val);
+				moveNextNode(nextStack);
+			} else {
+				result.add(prevStack.peek().val);
+				movePrevNode(prevStack);
+			}
+		}
+		return result;
+	}
+
+	private void movePrevNode(Stack<TreeNode> stack) {
+		TreeNode cur = stack.pop();
+		cur = cur.left;
+		while (cur != null) {
+			stack.add(cur);
+			cur = cur.right;
+		}
+	}
+
+	private void moveNextNode(Stack<TreeNode> stack) {
+		TreeNode cur = stack.pop();
+		cur = cur.right;
+		while (cur != null) {
+			stack.add(cur);
+			cur = cur.left;
+		}
+	}
+
+	public List<Integer> closestKValues3(TreeNode root, double target, int k) {
+		// write your code here
+		Stack<TreeNode> inOrderStack = new Stack<>();
+		Stack<TreeNode> reverseInOrderStack = new Stack<>();
+
+		while (root != null) {
+			if (root.val < target) {
+				reverseInOrderStack.add(root);
+				root = root.right;
+
+			} else {
+				inOrderStack.add(root);
+				root = root.left;
+
+			}
+		}
+
+		List<Integer> list = new ArrayList<>();
+		for (int i = 0; i < k; i++) {
+			double inOrderNextDiff = inOrderStack.isEmpty() ? Integer.MAX_VALUE : inOrderStack.peek().val - target;
+			double reverseInOrderDiff = reverseInOrderStack.isEmpty() ? Integer.MAX_VALUE : target - reverseInOrderStack.peek().val;
+
+			if (inOrderNextDiff < reverseInOrderDiff) {
+				list.add(inOrderStack.peek().val);
+				moveToBigger(inOrderStack);
+			} else {
+				list.add(reverseInOrderStack.peek().val);
+				moveToSmaller(reverseInOrderStack);
+			}
+		}
+
+		return list;
+
+	}
+
+	private void moveToBigger(Stack<TreeNode> stack) {
+		TreeNode node = stack.pop();
+		node = node.right;
+		while (node != null) {
+			stack.add(node);
+			node = node.left;
+		}
+	}
+
+	private void moveToSmaller(Stack<TreeNode> stack) {
+		TreeNode node = stack.pop();
+		node = node.left;
+
+		while (node != null) {
+			stack.add(node);
+			node = node.right;
+		}
+
+	}
+	public List<String> binaryTreePaths(TreeNode root) {
+		// write your code here
+		List<String> result = new ArrayList<>();
+		if (root == null) {
+			return result;
+		}
+
+		dfs(root, result, root.val + "");
+		return result;
+	}
+
+	public int kthSmallest(TreeNode root, int k) {
+		Map<TreeNode, Integer> nodeToCount = new HashMap<>();
+		countNode(root, nodeToCount);
+
+		return quickSelectTree(root, k, nodeToCount);
+	}
+
+	private int countNode (TreeNode node, Map<TreeNode, Integer> nodeToCount) {
+		if (node == null) {
+			return 0;
+		}
+
+		int left = countNode(node.left, nodeToCount);
+		int right = countNode(node.right, nodeToCount);
+
+		nodeToCount.put(node, left + right + 1);
+		return left + right + 1;
+	}
+
+	private int quickSelectTree(TreeNode node, int k, Map<TreeNode, Integer> nodeToCount) {
+		if (nodeToCount.get(node) + 1 == k) {
+			return node.val;
+		}
+
+		int numOfLeftNode = node.left == null ? 0 : nodeToCount.get(node.left);
+		if (numOfLeftNode >= k) {
+			return quickSelectTree(node.left, k, nodeToCount);
+		}
+
+		return quickSelectTree(node.right, k - numOfLeftNode - 1, nodeToCount);
+	}
+
+	private void dfs(TreeNode root, List<String> result, String temp) {
+		if (root.left != null && root.right != null) {
+			result.add(temp);
+		} else {
+			if (root.left != null) {
+				dfs(root.left, result, temp + root.left.val);
+			}
+
+			if (root.right != null) {
+				dfs(root.right, result, temp + root.right.val);
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 		Test t = new Test();
-		Set<String> set = new HashSet<>();
-		set.add("a");
-		set.add("b");
-		set.add("c");
+		TreeNode input = new TreeNode(2);
+		input.left = new TreeNode(1);
+		input.right = new TreeNode(3);
 
-		t.findLadders("a", "c", set);
+//		input.left = new TreeNode(4);
+//		input.left.right = new TreeNode(5);
+
+//		t.closestKValues2(input, 3.714286, 3);
+//		TreeNode input = new TreeNode(2147483647);
+//		t.closestKValues3(input, 0.0, 1);
+		t.kthSmallest(input, 1);
 	}
 }

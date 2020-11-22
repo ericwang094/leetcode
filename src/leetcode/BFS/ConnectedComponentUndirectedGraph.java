@@ -18,6 +18,7 @@ public class ConnectedComponentUndirectedGraph {
 			}
 
 			List<Integer> nodeResult = new ArrayList<>();
+
 			nodeResult.add(node.label);
 			set.add(node.label);
 
@@ -44,3 +45,6 @@ public class ConnectedComponentUndirectedGraph {
 		return result;
 	}
 }
+
+
+

@@ -110,15 +110,104 @@ public class Test {
 		return true;
 	}
 
+	public List<Integer> numIslands2(int n, int m, Point[] operators) {
+		// write your code here
+		List<Integer> result = new ArrayList<>();
+		for (int i = 0; i < operators.length; i++) {
+			int[][] grid = new int[n][m];
+			for (int j = 0; j <= i; j++) {
+				grid[operators[j].x][operators[j].y] = 1;
+			}
+
+			int numOfIsland = 0;
+			for (int j = 0; j <= i; j++) {
+				// System.out.println("i: " + i);
+				// System.out.println("j: " + j);
+				if (grid[operators[j].x][operators[j].y] == 1) {
+					numOfIsland++;
+					System.out.println("num of islands: " + numOfIsland);
+					bfs(grid, operators[j]);
+				}
+			}
+			result.add(numOfIsland);
+		}
+
+		return result;
+	}
+
+	private void bfs(int[][] grid, Point point) {
+		Queue<Point> queue = new LinkedList<>();
+		queue.add(point);
+
+		while (!queue.isEmpty()) {
+			Point p = queue.poll();
+			List<Point> neighbors = getNeighbors(p, grid);
+			for (Point neighbor : neighbors) {
+				queue.add(neighbor);
+			}
+		}
+	}
+
+	private List<Point> getNeighbors(Point p, int[][] grid) {
+		List<Point> result = new ArrayList<>();
+		int[] directionX = {-1, 0, 1, 0};
+		int[] directionY = {0, -1, 0, 1};
+
+		for (int i = 0; i < 4; i++) {
+			int newX = p.x + directionX[i];
+			int newY = p.y + directionY[i];
+			if (newX >= 0 && newY >= 0 && newX < grid.length && newY < grid[0].length && grid[newX][newY] == 1) {
+
+				grid[newX][newY] = 0;
+				result.add(new Point(newX, newY));
+			}
+		}
+		return result;
+	}
+
+	public long kDistinctCharacters(String s, int k) {
+		// Write your code here
+		Set<Character> set = new HashSet<>();
+		char[] cArr = new char[26];
+
+		int i = 0;
+
+		int result = 0;
+		for (int j = 0; j < s.length(); j++) {
+			char c = s.charAt(j);
+			cArr[c - 'a']++;
+			set.add(c);
+			if (set.size() >= k) {
+				result += s.length() - j;
+
+
+				cArr[s.charAt(i) - 'a']--;
+				if (cArr[s.charAt(i) - 'a'] == 0) {
+					set.remove(s.charAt(i));
+				}
+				i++;
+			}
+		}
+
+		return result;
+	}
 	public static void main(String[] args) {
 		Test t = new Test();
-		int[] input1 = {1,2,3};
-		int[][] input2 = {
-				{1,2},
-				{1,3},
-				{2,3}
-		};
-		t.sequenceReconstruction(input1, input2);
+//		int[] input1 = {1,2,3};
+//		int[][] input2 = {
+//				{0,1,0,0,0},
+//				{1,0,0,2,1},
+//				{0,1,0,0,0}
+//		};
+//		Point[] list = new Point[4];
+//		list[0] = new Point(1,1 );
+//		list[1] = new Point(0,1 );
+//		list[2] = new Point(3,3 );
+//		list[3] = new Point(3,4 );
+
+//		t.numIslands2(4, 5, list);
+		t.kDistinctCharacters("kckke", 2);
+
 	}
 }
 

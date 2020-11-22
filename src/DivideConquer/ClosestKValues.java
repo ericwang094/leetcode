@@ -144,4 +144,71 @@ public class ClosestKValues {
             l = l.right;
         }
     }
+
+    public List<Integer> closestKValues3(TreeNode root, double target, int k) {
+        // write your code here
+        Stack<TreeNode> nextStack = new Stack<>();
+        Stack<TreeNode> prevStack = new Stack<>();
+
+        while (root != null) {
+            if (root.val > target) {
+//                prevStack.add(root);
+                nextStack.add(root);
+                root = root.left;
+            } else {
+//                nextStack.add(root);
+                prevStack.add(root);
+                root = root.right;
+            }
+        }
+
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < k; i++) {
+            double nextPreDiff = prevStack.isEmpty() ? Double.MAX_VALUE : Math.abs(prevStack.peek().val - target);
+            double nextNextDiff = nextStack.isEmpty() ? Double.MAX_VALUE: Math.abs(nextStack.peek().val - target);
+
+            if (nextPreDiff < nextNextDiff) {
+                result.add(prevStack.peek().val);
+                movePre(prevStack);
+            } else {
+                result.add(nextStack.peek().val);
+                moveNext(nextStack);
+            }
+        }
+
+        return result;
+    }
+
+    private void moveNext(Stack<TreeNode> stack) {
+        TreeNode node = stack.pop();
+        if (node.right != null) {
+            node = node.right;
+            while (node != null) {
+                stack.add(node);
+                node = node.left;
+            }
+        }
+    }
+
+    private void movePre(Stack<TreeNode> stack) {
+        TreeNode node = stack.pop();
+        if (node.left != null) {
+            node = node.left;
+            while (node != null) {
+                stack.add(node);
+                node = node.right;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        ClosestKValues t = new ClosestKValues();
+        TreeNode input = new TreeNode(4);
+        input.left = new TreeNode(2);
+        input.right = new TreeNode(5);
+        input.left.left = new TreeNode(1);
+        input.left.right = new TreeNode(3);
+
+        t.closestKValues3(input, 3.714286, 3);
+    }
 }
