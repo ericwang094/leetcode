@@ -191,23 +191,78 @@ public class Test {
 
 		return result;
 	}
+
+	/**
+	 * @param words: a list of words
+	 * @return: a string which is correct order
+	 */
+	public String alienOrder(String[] words) {
+		if (words == null || words.length == 0) {
+			return "";
+		}
+
+		Map<Character, Set<Character>> graph = new HashMap<>();
+		Map<Character, Integer> indegreeMap = new HashMap<>();
+
+		for (String word : words) {
+			for (int i = 0; i < word.length(); i++) {
+				char c = word.charAt(i);
+				graph.putIfAbsent(c, new HashSet<>());
+				indegreeMap.putIfAbsent(c, 0);
+			}
+		}
+
+		for (int i = 0; i < words.length - 1; i++) {
+			String word = words[i];
+			String nextWord = words[i + 1];
+			int index = 0;
+			while (index < word.length() && index < nextWord.length()) {
+				if (word.charAt(index) != nextWord.charAt(index)) {
+					if (!graph.get(word.charAt(index)).contains(nextWord.charAt(index))) {
+						graph.get(word.charAt(index)).add(nextWord.charAt(index));
+						indegreeMap.put(nextWord.charAt(index), indegreeMap.get(nextWord.charAt(index)) + 1);
+						break;
+					}
+				}
+				index++;
+			}
+		}
+
+		PriorityQueue<Character> pq = new PriorityQueue<>();
+		for (Map.Entry<Character, Integer> entry : indegreeMap.entrySet()){
+			if (entry.getValue() == 0) {
+				pq.add(entry.getKey());
+			}
+		}
+
+		StringBuilder sb = new StringBuilder();
+		while (!pq.isEmpty()) {
+			char currentChar = pq.poll();
+			sb.append(currentChar);
+
+			for (char c : graph.get(currentChar)) {
+				int currentInDegree = indegreeMap.get(c);
+				if (currentInDegree == 1) {
+					pq.add(c);
+					indegreeMap.remove(c);
+				} else {
+					indegreeMap.put(c, currentInDegree - 1);
+				}
+			}
+		}
+
+		String resultString = sb.toString();
+		if (resultString.length() != graph.size()) {
+			return "";
+		}
+
+		return resultString;
+	}
+
 	public static void main(String[] args) {
 		Test t = new Test();
-//		int[] input1 = {1,2,3};
-//		int[][] input2 = {
-//				{0,1,0,0,0},
-//				{1,0,0,2,1},
-//				{0,1,0,0,0}
-//		};
-//		Point[] list = new Point[4];
-//		list[0] = new Point(1,1 );
-//		list[1] = new Point(0,1 );
-//		list[2] = new Point(3,3 );
-//		list[3] = new Point(3,4 );
 
-//		t.numIslands2(4, 5, list);
-		t.kDistinctCharacters("kckke", 2);
-
+		t.alienOrder(new String[]{"wrt", "wrf", "er", "ett", "rftt"});
 	}
-}
 
+}

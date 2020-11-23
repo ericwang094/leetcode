@@ -62,4 +62,10 @@ public class LintCodeAlienDictionary2 {
 		}
 		return sb.toString();
 	}
+
+	public static void main(String[] args) {
+		LintCodeAlienDictionary2 t = new LintCodeAlienDictionary2();
+
+		t.alienOrder(new String[]{"wrt", "wrf", "er", "ett", "rftt"});
+	}
 }
