@@ -41,13 +41,23 @@ public class Heap_3_25 {
     }
 
     public static void heapify(int[] arr, int index, int heapSize) {
+        // this is used to remove the value in the array and make the rest of array still heap
         // index means the position that we want to do heapify
+        // this function only make the value after index follows heap
 
         int left = 2 * index + 1;
         while (left < heapSize) {
             // for left and right child, choose the one that is larger
-            int largerChild = left + 1 < heapSize && arr[left] > arr[left + 1] ? left : left  + 1;
-
+            int largerChild;
+            if (left + 1 >= heapSize) {
+                largerChild = left;
+            } else if (arr[left] > arr[left + 1]) {
+                largerChild = left;
+            } else {
+                largerChild = left + 1;
+            }
+             // can use this logic but a bit tricky to understand
+//            int largerChild = left + 1 < heapSize && arr[left + 1] > arr[left] ? left + 1: left;
             // compare the larger child with the parent node
             int largerIndex = arr[index] > arr[largerChild] ? index : largerChild;
 
@@ -59,5 +69,23 @@ public class Heap_3_25 {
             index = largerIndex;
             left = 2 * index + 1;
         }
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {5,2,3,1 };
+
+        Heap_3_25.heapSort(arr);
+
+        for (int num : arr) {
+            System.out.println(num);
+        }
+
+        int[] testArr = {1, 2, 3, 4};
+        int index = 0;
+        int index1 = 1;
+        int num1 = testArr[index] > testArr[index1] ? index : index1; //1
+        int num2 = testArr[index1] > testArr[index] ? index1 : index; // 1
+
+        System.out.println("num1 = " + num1 + ", num2 = " + num2);
     }
 }
