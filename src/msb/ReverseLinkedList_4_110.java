@@ -1,5 +1,7 @@
 package msb;
 
+import msb.CommonDataStructure.ListNode;
+
 public class ReverseLinkedList_4_110 {
 
     public ListNode reverseList(ListNode head) {
@@ -20,12 +22,5 @@ public class ReverseLinkedList_4_110 {
         return node;
     }
 
-    public class ListNode {
-      int val;
-      ListNode next;
-      ListNode() {}
-      ListNode(int val) { this.val = val; }
-      ListNode(int val, ListNode next) { this.val = val; this.next = next; }
-    }
 
 }
