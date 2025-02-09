@@ -6,26 +6,30 @@ public class InOrderSuccessor_6_200 {
     // this is a similar question from blibli
     // https://leetcode.cn/problems/successor-lcci/
     public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
-        TreeNode successor = null;
+        if (root == null || p == null) {
+            return root;
+        }
+
         if (p.right != null) {
-            successor = p.right;
-            while (successor.left != null) {
-                successor = successor.left;
+            p = p.right;
+            while (p.left != null) {
+                p = p.left;
             }
+
+            return p;
+        } else {
+            TreeNode successor = null;
+            while (root != null) {
+                if (root.val > p.val) {
+                    successor = root;
+                    root = root.left;
+                } else {
+                    root = root.right;
+                }
+            }
+
             return successor;
         }
-
-        TreeNode node = root;
-        while (node != null) {
-            if (node.val > p.val) {
-                successor = node;
-                node = node.left;
-            } else {
-                node = node.right;
-            }
-        }
-
-        return successor;
     }
 
     // the original question is not shown in leetcode
