@@ -3,6 +3,8 @@ package msb;
 import java.util.*;
 
 //https://leetcode.com/problems/connecting-cities-with-minimum-cost/?envType=problem-list-v2&envId=minimum-spanning-tree
+// this one is similar
+// https://leetcode.com/problems/min-cost-to-connect-all-points/?envType=problem-list-v2&envId=minimum-spanning-tree
 // This is not correct answer.
 public class ConnectingCitiesWithMinimumCostPrim_7_135 {
     private class Node {
@@ -51,31 +53,29 @@ public class ConnectingCitiesWithMinimumCostPrim_7_135 {
 
         PriorityQueue<Edge> pQueue = new PriorityQueue<>((o1, o2) -> o1.weight - o2.weight);
 
-        for (Node node : graph.nodes.values()) {
-            if (visited.contains(node)) {
-                continue;
-            }
-            pQueue.addAll(node.edges);
-
-            while (!pQueue.isEmpty()) {
-                Edge edge = pQueue.poll();
-                Node to = edge.to;
-                if (!visited.contains(to)) {
-                    result.add(edge);
-                    visited.add(to);
-                    pQueue.addAll(to.edges);
-                }
+        Node node = graph.nodes.get(1);
+        if (node == null) {
+            return -1;
+        }
+        pQueue.add(new Edge(0, node, node));
+        while (!pQueue.isEmpty()) {
+            Edge edge = pQueue.poll();
+            Node to = edge.to;
+            if (!visited.contains(to)) {
+                result.add(edge);
+                visited.add(to);
+                pQueue.addAll(to.edges);
             }
         }
 
-        System.out.println("graph node size: " + graph.nodes.size());
-        for (Edge edge : result) {
-            System.out.println("from: " + edge.from.val + " to: " + edge.to.val + " weight: " + edge.weight);
-        }
-
-//        if (result.size() != graph.nodes.size() - 1) {
-//            return -1;
+//        System.out.println("graph node size: " + graph.nodes.size());
+//        for (Edge edge : result) {
+//            System.out.println("from: " + edge.from.val + " to: " + edge.to.val + " weight: " + edge.weight);
 //        }
+
+        if (visited.size() != n) {
+            return -1;
+        }
 
         int price = 0;
         for (Edge edge: result) {
@@ -128,7 +128,9 @@ public class ConnectingCitiesWithMinimumCostPrim_7_135 {
 
         int[][] test = {{2,1,50459},{3,2,47477},{4,2,52585},{5,3,16477}};
 
-        sol.minimumCost(5, test);
+//        int[][] test = {{2,1,50459}};
+
+        sol.minimumCost(4, test);
     }
 }
 

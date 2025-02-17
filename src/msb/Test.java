@@ -2,60 +2,105 @@ package msb;
 
 import msb.CommonDataStructure.ListNode;
 
+import java.util.*;
+
 public class Test {
-    public ListNode Partition(ListNode head, int x) {
-        if (head == null || head.next == null) {
-            return head;
+    private class Edge {
+        public int from;
+        public int to;
+        public int weight;
+
+        public Edge (int from, int to, int weight) {
+            this.from = from;
+            this.to = to;
+            this.weight = weight;
+        }
+    }
+
+
+
+    private Set<Edge> constructGraph(int[][] connections) {
+        Set<Edge> edges = new HashSet<>();
+        for (int[] connection: connections) {
+            int from = connection[0];
+            int to = connection[1];
+            int weight = connection[2];
+
+            Edge edge1 = new Edge(from, to, weight);
+
+            edges.add(edge1);
         }
 
-        ListNode LH = null;
-        ListNode LT = null;
-        ListNode MH = null;
-        ListNode MT = null;
-        ListNode GH = null;
-        ListNode GT = null;
-        ListNode next = null;
+        return edges;
+    }
 
-        while (head != null) {
-            next = head.next;
-            head.next = null;
-            if (head.val < x) {
-                if (LH == null) {
-                    LH = head;
-                    LT = head;
-                } else {
-                    LT.next = head;
-                    LT = head;
-                }
-            } else if (head.val == x) {
-                if (MH == null) {
-                    MH = head;
-                    MT = head;
-                } else {
-                    MT.next = head;
-                    MT = head;
-                }
-            } else {
-                if (GH == null) {
-                    GH = head;
-                    GT = head;
-                } else {
-                    GT.next = head;
-                    GT = head;
-                }
+    public class MySet {
+        public HashMap<Integer, HashSet<Edge>> setMap = new HashMap<>();
+        public MySet(Set<Edge> edges) {
+            for (Edge edge: edges) {
+                HashSet<Edge> set = new HashSet<>();
+                set.add(edge);
+                setMap.put(edge.from, set);
+            }
+        }
+
+        public boolean isSameSet(Integer nodeA, Integer nodeB) {
+            return setMap.get(nodeA) == setMap.get(nodeB);
+        }
+
+        public void union(Integer nodeA, Integer nodeB) {
+            HashSet<Edge> nodeASet = setMap.get(nodeA);
+            HashSet<Edge> nodeBSet = setMap.get(nodeB);
+
+            nodeASet.addAll(nodeBSet);
+            for (Edge edge : nodeASet) {
+                setMap.put(edge.from, nodeASet);
             }
 
-            head = next;
+//            for (Node toNode: nodeBSet) {
+//                nodeASet.add(toNode);
+//                setMap.put(toNode, nodeASet);
+//            }
         }
-        if (LT != null) {
-            LT.next = MH;
-            MT = MT == null ? LT : MT;
-        }
+    }
 
-        if (MT != null) {
-            MT.next = GH;
-        }
+    public int minimumCost(int n, int[][] connections) {
+        Set<Edge> graph = constructGraph(connections);
 
-        return LH != null ? LH : (MH != null ? MH : GH);
+        MySet mySet = new MySet(graph);
+
+        PriorityQueue<Edge> pQueue = new PriorityQueue<>((Edge o1, Edge o2) -> o1.weight - o2.weight);
+
+        pQueue.addAll(graph);
+
+        int cost = 0;
+        int numEdges = 0;
+        while (!pQueue.isEmpty()) {
+            Edge edge = pQueue.poll();
+            if (!mySet.isSameSet(edge.from, edge.to)) {
+                cost += edge.weight;
+                numEdges++;
+                mySet.union(edge.from, edge.to);
+            }
+        }
+        if (numEdges != n - 1 ) {
+            return -1;
+
+        }
+        return cost;
+    }
+
+
+    public static void main(String[] args) {
+        Test sol = new Test();
+
+//        int[][] test = {{2,1,50459},{3,2,47477},{4,2,52585},{5,3,16477}};
+//        int[][] test = {{2,1,50459}};
+        int[][] test2 = {{1,2,5},{1,3,6},{2,3,1}};
+
+//        int[][] test = {{2,1,50459}};
+
+        sol.minimumCost(3, test2);
+
     }
 }
