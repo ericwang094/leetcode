@@ -3,7 +3,7 @@ package msb;
 import java.util.Arrays;
 
 // https://leetcode.com/problems/maximum-length-of-pair-chain/description/
-public class MaximumLengthOfPairChain {
+public class MaximumLengthOfPairChain_8 {
     public int findLongestChain(int[][] pairs) {
         if (pairs == null || pairs.length == 0) {
             return 0;
@@ -22,7 +22,7 @@ public class MaximumLengthOfPairChain {
     }
 
     public static void main(String[] args) {
-        MaximumLengthOfPairChain maxLengthOfPairChain = new MaximumLengthOfPairChain();
+        MaximumLengthOfPairChain_8 maxLengthOfPairChain = new MaximumLengthOfPairChain_8();
         int[][] test = {{1,2}, {2,3},{3,5}};
         int result = maxLengthOfPairChain.findLongestChain(test);
         System.out.println(result);

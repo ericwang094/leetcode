@@ -92,11 +92,40 @@ public class LongestCommonPrefix_8_45 {
         return "";
     }
 
+    public String longestCommonPrefix2(String[] strs) {
+        if (strs == null || strs.length == 0) {
+            return "";
+        }
+
+        String shortestString = strs[0];
+        for (String str: strs) {
+            shortestString = shortestString.length() <= str.length() ? shortestString: str;
+        }
+
+        String result = "";
+
+        int index = 0;
+
+        while (index < shortestString.length()) {
+            char commonChar = shortestString.charAt(index);
+            for (String str: strs) {
+                if (str.charAt(index) != commonChar) {
+                    return result;
+                }
+            }
+            result = shortestString.substring(0, index + 1);
+            index++;
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         LongestCommonPrefix_8_45 lcp = new LongestCommonPrefix_8_45();
         String[] strs = {"flower","flow","flight"};
 
-        String res = lcp.longestCommonPrefix(strs);
+//        String res = lcp.longestCommonPrefix(strs);
+        String res = lcp.longestCommonPrefix2(strs);
         System.out.println(res);
     }
 }
