@@ -3,6 +3,7 @@ package msb;
 import java.util.ArrayList;
 import java.util.List;
 
+// https://leetcode.com/problems/permutations/
 public class Permutation_9_114 {
     public List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> ans = new ArrayList<>();
@@ -21,7 +22,7 @@ public class Permutation_9_114 {
             if (!curr.contains(num)) {
                 curr.add(num);
                 backtrack(curr, ans, nums);
-                curr.remove(curr.size() - 1);
+                curr.removeLast();
             }
         }
     }
