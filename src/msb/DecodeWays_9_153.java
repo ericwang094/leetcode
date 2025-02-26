@@ -1,5 +1,5 @@
 package msb;
-// https://leetcode.com/problems/decode-ways/submissions/1554882801/
+// https://leetcode.com/problems/decode-ways/description/
 
 // this will exceed time limit in leetcode
 public class DecodeWays_9_153 {
